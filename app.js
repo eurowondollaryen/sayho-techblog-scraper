@@ -18,6 +18,10 @@ const global_urls = [{
     "title_kr" : "우아한형제들",
     "title_en" : "wooahan",
     "base_url" : "https://woowabros.github.io/"
+}, {
+	"title_kr" : "네이버",
+    "title_en" : "naver",
+    "base_url" : "https://d2.naver.com/home"
 }];
 //port set
 const port = process.env.PORT || 3000;
