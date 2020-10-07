@@ -19,11 +19,11 @@ const global_urls = [{
     "title_en" : "wooahan",
     "base_url" : "https://woowabros.github.io"
 }, {
-	"title_kr" : "네이버",
+	"title_kr" : "네이버(미구현)",
     "title_en" : "naver",
     "base_url" : "https://d2.naver.com/home"
 }, {
-	"title_kr" : "쿠팡",
+	"title_kr" : "쿠팡(미구현)",
     "title_en" : "coupang",
     "base_url" : "https://medium.com/coupang-tech/technote/home"
 }, {
@@ -123,6 +123,7 @@ app.get("/get/wooahan", function(req, res) {
                 subtitle: $(this).find("a").children("p.post-description").text()
             };
         });
+        console.log(ulList);
         const data = ulList.filter(n => n.title);
         return data;
     }).then(data => {
@@ -137,7 +138,7 @@ app.get("/get/spoqa", function(req, res) {
     const getHtml = async () => {
         try {
         	console.log("connecting to " + global_urls[3]["base_url"] + "...");
-            return await axios.get(global_urls[2]["base_url"]);//global url array
+            return await axios.get(global_urls[3]["base_url"]);//global url array
         } catch (error) {
             console.error(error);
         }
@@ -145,7 +146,6 @@ app.get("/get/spoqa", function(req, res) {
 
     getHtml().then(html => {
         let ulList = [];
-
         const $ = cheerio.load(html.data);//cheerio init
         const $bodyList = $("ul.posts").children("li.post-item").children("div.post-author-info");
         
@@ -156,6 +156,7 @@ app.get("/get/spoqa", function(req, res) {
                 subtitle: $(this).find("p.post-description").text()
             };
         });
+        console.log(ulList);
         const data = ulList.filter(n => n.title);
         return data;
     }).then(data => {
