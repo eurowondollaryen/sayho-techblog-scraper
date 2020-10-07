@@ -17,11 +17,19 @@ express-session : SESSION MANAGEMENT
 const global_urls = [{
     "title_kr" : "우아한형제들",
     "title_en" : "wooahan",
-    "base_url" : "https://woowabros.github.io/"
+    "base_url" : "https://woowabros.github.io"
 }, {
 	"title_kr" : "네이버",
     "title_en" : "naver",
     "base_url" : "https://d2.naver.com/home"
+}, {
+	"title_kr" : "쿠팡",
+    "title_en" : "coupang",
+    "base_url" : "https://medium.com/coupang-tech/technote/home"
+}, {
+	"title_kr" : "스포카",
+    "title_en" : "spoqa",
+    "base_url" : "https://spoqa.github.io/"
 }];
 //port set
 const port = process.env.PORT || 3000;
@@ -125,6 +133,111 @@ app.get("/get/wooahan", function(req, res) {
     });
 });
 
+app.get("/get/spoqa", function(req, res) {
+    const getHtml = async () => {
+        try {
+        	console.log("connecting to " + global_urls[3]["base_url"] + "...");
+            return await axios.get(global_urls[2]["base_url"]);//global url array
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    getHtml().then(html => {
+        let ulList = [];
+
+        const $ = cheerio.load(html.data);//cheerio init
+        const $bodyList = $("ul.posts").children("li.post-item").children("div.post-author-info");
+        
+        $bodyList.each(function(i, elem) {
+            ulList[i] = {
+                url: global_urls[3]["base_url"] + $(this).find("h2.post-title").find("a").attr("href"),
+                title: $(this).find("h2.post-title").find("a").find("span.post-title-words").text(),
+                subtitle: $(this).find("p.post-description").text()
+            };
+        });
+        const data = ulList.filter(n => n.title);
+        return data;
+    }).then(data => {
+        res.render("spoqa", {
+            title: "스포카",
+            list: data
+        });
+    });
+});
+
+/* 현재 네이버, 쿠팡은 스크래핑 안됨.
+페이지 로드 후 포스트를 다이나믹하게 불러오기 때문인 것으로 추정됨.*/
+//naver web scrapping(미완)
+/*
+app.get("/get/naver", function(req, res) {
+    const getHtml = async () => {
+        try {
+            return await axios.get(global_urls[1]["base_url"]);//global url array
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    getHtml().then(html => {
+        let ulList = [];
+        const $ = cheerio.load(html.data);//cheerio init
+        console.log(html.data);
+        const $bodyList = $("div.contents").children("div.post_article").children("div.cont_post");
+        $bodyList.each(function(i, elem) {
+            ulList[i] = {
+                url: global_urls[1]["base_url"] + $(this).find("h2").find("a").attr("href"),
+                title: $(this).find("h2").find("a").text(),
+                subtitle: $(this).find("a.post_txt_wrap").children("div.post_txt").text()
+            };
+        });
+        console.log(ulList);
+        const data = ulList.filter(n => n.title);
+        return data;
+    }).then(data => {
+        res.render("naver", {
+            title: "네이버",
+            list: data
+        });
+    });
+});
+
+//coupang
+app.get("/get/coupang", function(req, res) {
+    const getHtml = async () => {
+        try {
+        	console.log("connecting to " + global_urls[2]["base_url"] + "...");
+            return await axios.get(global_urls[2]["base_url"]);//global url array
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    getHtml().then(html => {
+        let ulList = [];
+        console.log(html.data);
+
+        const $ = cheerio.load(html.data);//cheerio init
+        const $bodyList = $("section.u-marginTop30").children("div.row");
+        
+        $bodyList.each(function(i, elem) {
+        	console.log("loop " + i + "" + $(this).text());
+            ulList[i] = {
+                url: global_urls[1]["base_url"] + $(this).find("h2").find("a").attr("href"),
+                title: $(this).find("h2").find("a").text(),
+                subtitle: $(this).find("a.post_txt_wrap").children("div.post_txt").text()
+            };
+        });
+        const data = ulList.filter(n => n.title);
+        return data;
+    }).then(data => {
+        res.render("coupang", {
+            title: "쿠팡",
+            list: data
+        });
+    });
+});
+*/
 app.get("*", (req, res) => {
     res.end('<head><title>404</title></head><body><h1>404 Error!</h1></body>');
 });
