@@ -30,6 +30,10 @@ const global_urls = [{
 	"title_kr" : "스포카",
     "title_en" : "spoqa",
     "base_url" : "https://spoqa.github.io/"
+}, {
+    "title_kr" : "라인",
+    "title_en" : "line",
+    "base_url" : "https://engineering.linecorp.com/ko/blog/"
 }];
 //port set
 const port = process.env.PORT || 3000;
@@ -167,6 +171,38 @@ app.get("/get/spoqa", function(req, res) {
     });
 });
 
+app.get("/get/line", function(req, res) {
+    const getHtml = async () => {
+        try {
+            console.log("connecting to " + global_urls[4]["base_url"] + "...");
+            return await axios.get(global_urls[4]["base_url"]);//global url array
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    getHtml().then(html => {
+        let ulList = [];
+        const $ = cheerio.load(html.data);//cheerio init
+        const $bodyList = $("div#post-list").children("article.post").children("div.article-inner");
+        
+        $bodyList.each(function(i, elem) {
+            ulList[i] = {
+                url: $(this).find("header.entry-header").find("div.entry-header-text-top").find("h2.entry-title").find("a").attr("href"),
+                title: $(this).find("header.entry-header").find("div.entry-header-text-top").find("h2.entry-title").find("a").text(),
+                subtitle: $(this).find("header.entry-content").find("div.entry-summary").find("p").text()
+            };
+        });
+        console.log(ulList);
+        const data = ulList.filter(n => n.title);
+        return data;
+    }).then(data => {
+        res.render("line", {
+            title: "라인",
+            list: data
+        });
+    });
+});
 /* 현재 네이버, 쿠팡은 스크래핑 안됨.
 페이지 로드 후 포스트를 다이나믹하게 불러오기 때문인 것으로 추정됨.*/
 //naver web scrapping(미완)
