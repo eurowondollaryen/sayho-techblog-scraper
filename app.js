@@ -14,12 +14,6 @@ body-parser : FOR HANDLING POST DATA
 express-session : SESSION MANAGEMENT
 */
 
-/*
-Selenium
-npm install --save selenium-webdriver
-*/
-const {Builder, By, Key, until} = require("selenium-webdriver");
-
 //url global object
 const global_urls = [{
     "title_kr" : "우아한형제들",
@@ -95,24 +89,63 @@ module.exports = function(app, fs) {
 */
 //routing set
 
+/*
+Selenium
+npm install --save selenium-webdriver
+*/
+
+/*
+selenium documentation
+https://www.selenium.dev/documentation/en/getting_started_with_webdriver/locating_elements/
+*/
+
+const {Builder, By, Key, until} = require("selenium-webdriver");
+
 app.get("/test", function(req, res) {
 	//selenium test
 	(async function example() {
-		let driver = await new Builder().forBrowser('chrome').build();//build a browser driver
+		let driver = await new Builder().forBrowser('chrome').build();
 		try {
-			//Navigate to URL
-			await driver.get("https://www.google.com");
-			
-			//Enter text "cheese" and perform keyboard action "Enter"
-			let firstResult = await driver.findElement(By.name("q")).sendKeys("cheese", Key.ENTER);
-			
-			console.log(await firstResult.getAttribute("textContext"));
+			// Navigate to Url
+			await driver.get('https://www.google.com');
+
+			// Enter text "cheese" and perform keyboard action "Enter"
+			await driver.findElement(By.name('q')).sendKeys('cheese', Key.ENTER);
+
+			let firstResult = await driver.wait(until.elementLocated(By.css('h3>div')), 10000);
+
+			console.log(await firstResult.getAttribute('textContent'));
 		}
-		finally {
+		finally{
 			driver.quit();
 		}
 	})();
 });
+
+/*
+const {Builder, By, Key, until} = require('selenium-webdriver');
+
+(async function example() {
+    let driver = await new Builder().forBrowser('chrome').build();
+    try {
+        // Navigate to Url
+        await driver.get('https://www.google.com');
+
+        // Enter text "cheese" and perform keyboard action "Enter"
+        await driver.findElement(By.name('q')).sendKeys('cheese', Key.ENTER);
+
+        let firstResult = await driver.wait(until.elementLocated(By.css('h3>div')), 10000);
+
+        console.log(await firstResult.getAttribute('textContent'));
+    }
+    finally{
+        driver.quit();
+    }
+})();
+*/
+
+
+
 app.get("/", function(req, res) {
     //page rendering method 1. read file and render its text (very primitive)
     /*
