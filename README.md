@@ -24,7 +24,7 @@
 2. 동적인 페이지를 읽어주는 [Selenium](https://www.selenium.dev/documentation/en/) 사용 => 적용 완료. 2020.11.11
 
 ## 세팅 방법
-1. 적당한 경로를 환경변수 Path에 추가한다. C:\Users\Steve\Documents\SeleniumBrowserDriver
+1. 적당한 경로를 환경변수 Path에 추가한다.
 2. 해당 경로에 내가 지금 사용하는 Chrome 버전과 맞는 브라우저 드라이버를 다운받는다. => [다운받는곳](https://sites.google.com/a/chromium.org/chromedriver/downloads)
 3. `git clone https://github.com/eurowondollaryen/sayho-techblog-scraper`
 4. `cd sayho-techblog-scraper`
