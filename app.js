@@ -20,11 +20,11 @@ const global_urls = [{
     "title_en" : "wooahan",
     "base_url" : "https://woowabros.github.io"
 }, {
-	"title_kr" : "네이버(미구현)",
+	"title_kr" : "네이버",
     "title_en" : "naver",
     "base_url" : "https://d2.naver.com/home"
 }, {
-	"title_kr" : "쿠팡(미구현)",
+	"title_kr" : "쿠팡",
     "title_en" : "coupang",
     "base_url" : "https://medium.com/coupang-tech/technote/home"
 }, {
@@ -92,57 +92,13 @@ module.exports = function(app, fs) {
 /*
 Selenium
 npm install --save selenium-webdriver
-*/
 
-/*
 selenium documentation
 https://www.selenium.dev/documentation/en/getting_started_with_webdriver/locating_elements/
 */
 
 const {Builder, By, Key, until} = require("selenium-webdriver");
 
-app.get("/test", function(req, res) {
-	//selenium test
-	(async function example() {
-		let driver = await new Builder().forBrowser('chrome').build();
-		try {
-			// Navigate to Url
-			await driver.get('https://www.google.com');
-
-			// Enter text "cheese" and perform keyboard action "Enter"
-			await driver.findElement(By.name('q')).sendKeys('cheese', Key.ENTER);
-
-			let firstResult = await driver.wait(until.elementLocated(By.css('h3>div')), 10000);
-
-			console.log(await firstResult.getAttribute('textContent'));
-		}
-		finally{
-			driver.quit();
-		}
-	})();
-});
-
-/*
-const {Builder, By, Key, until} = require('selenium-webdriver');
-
-(async function example() {
-    let driver = await new Builder().forBrowser('chrome').build();
-    try {
-        // Navigate to Url
-        await driver.get('https://www.google.com');
-
-        // Enter text "cheese" and perform keyboard action "Enter"
-        await driver.findElement(By.name('q')).sendKeys('cheese', Key.ENTER);
-
-        let firstResult = await driver.wait(until.elementLocated(By.css('h3>div')), 10000);
-
-        console.log(await firstResult.getAttribute('textContent'));
-    }
-    finally{
-        driver.quit();
-    }
-})();
-*/
 
 
 
@@ -203,6 +159,76 @@ app.get("/get/wooahan", function(req, res) {
             list: data
         });
     });
+});
+
+//naver
+app.get("/get/naver", function(req, res) {
+	//selenium
+	(async function example() {
+		var data = [];
+		let driver = await new Builder().forBrowser('chrome').build();
+		try {
+			// Navigate to Url
+			await driver.get(global_urls[1]["base_url"]);
+			//wait till loaded
+			await driver.wait(until.elementLocated(By.css('div.contents>div.post_article>div.cont_post')), 10000);
+			
+			let elements = await driver.findElements(By.css('div.contents>div.post_article>div.cont_post'));
+			let count = 0;
+			console.log(elements.length);
+			for(let e of elements) {
+				data.push({});
+				data[count]["url"] = await e.findElement(By.css("h2>a")).getAttribute("href");
+				data[count]["title"] = await e.findElement(By.css("h2>a")).getText();
+				data[count++]["subtitle"] = await e.findElement(By.css("a.post_txt_wrap>div.post_txt")).getText();
+				//console.log(await e.findElement(By.css("h2>a")).getAttribute("href"););//url
+				//console.log(await e.findElement(By.css("h2>a")).getText());//title
+				//console.log(await e.findElement(By.css("a.post_txt_wrap>div.post_txt")).getText());//subtitle
+			}
+		}
+		finally{
+			driver.quit();
+			res.render("naver", {
+				title: "네이버",
+				list: data
+			});
+		}
+	})();
+});
+
+//coupang
+app.get("/get/coupang", function(req, res) {
+	//selenium
+	(async function example() {
+		var data = [];
+		let driver = await new Builder().forBrowser('chrome').build();
+		try {
+			// Navigate to Url
+			await driver.get(global_urls[2]["base_url"]);
+			//wait till loaded
+			await driver.wait(until.elementLocated(By.css('section.u-marginTop30>div.row>div.col>div.col')), 10000);
+			
+			let elements = await driver.findElements(By.css('section.u-marginTop30>div.row>div.col>div.col'));
+			let count = 0;
+			console.log(elements.length);
+			for(let e of elements) {
+				data.push({});
+				data[count]["url"] = await e.findElement(By.css("a")).getAttribute("href");
+				data[count]["title"] = await e.findElement(By.css("a>h3>div")).getText();
+				data[count++]["subtitle"] = await e.findElement(By.css("div>div")).getText();
+				console.log(await e.findElement(By.css("a")).getAttribute("href"));//url
+				console.log(await e.findElement(By.css("a>h3>div")).getText());//title
+				console.log(await e.findElement(By.css("div>div")).getText());//subtitle
+			}
+		}
+		finally{
+			driver.quit();
+			res.render("coupang", {
+				title: "쿠팡",
+				list: data
+			});
+		}
+	})();
 });
 
 app.get("/get/spoqa", function(req, res) {
@@ -305,110 +331,38 @@ app.get("/get/google", function(req, res) {
 });
 
 app.get("/get/nhn", function(req, res) {
-    const getHtml = async () => {
-        try {
-            console.log("connecting to " + global_urls[6]["base_url"] + "...");
-            return await axios.get(global_urls[6]["base_url"]);//global url array
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
-    getHtml().then(html => {
-        let ulList = [];
-        const $ = cheerio.load(html.data);//cheerio init
-        const $bodyList = $("ul.lst_type").children("li.lst_item");
-        
-        $bodyList.each(function(i, elem) {
-            ulList[i] = {
-                url: global_urls[6]["base_url"] + $(this).find("a").attr("href"),
-                title: $(this).find("a").find("div.sec_box").find("h3.tit").text(),
-                date: $(this).find("a").find("div.sec_box").find("div.sec_dn").find("span.date").text()
-            };
-        });
-        console.log(ulList);
-        const data = ulList.filter(n => n.title);
-        return data;
-    }).then(data => {
-        res.render("nhn", {
-            title: "NHN",
-            list: data
-        });
-    });
+	//selenium
+	(async function example() {
+		var data = [];
+		let driver = await new Builder().forBrowser('chrome').build();
+		try {
+			// Navigate to Url
+			await driver.get(global_urls[6]["base_url"]);
+			//wait till loaded
+			await driver.wait(until.elementLocated(By.css('ul.lst_type>li.lst_item>a')), 10000);
+			
+			let elements = await driver.findElements(By.css('ul.lst_type>li.lst_item>a'));
+			let count = 0;
+			for(let e of elements) {
+				data.push({});
+				data[count]["url"] = await e.getAttribute("href");
+				data[count]["title"] = await e.findElement(By.css("div.sec_box>h3")).getText();
+				data[count++]["subtitle"] = await e.findElement(By.css("div.sec_box>p")).getText();
+				//console.log(await e.getAttribute("href"));//link
+				//console.log(await e.findElement(By.css("div.sec_box>h3")).getText());//title
+				//console.log(await e.findElement(By.css("div.sec_box>p")).getText());//subtitle
+			}
+		}
+		finally{
+			driver.quit();
+			res.render("nhn", {
+				title: "NHN",
+				list: data
+			});
+		}
+	})();
 });
 
-/* 현재 네이버, 쿠팡은 스크래핑 안됨.
-페이지 로드 후 포스트를 다이나믹하게 불러오기 때문인 것으로 추정됨.*/
-//naver web scrapping(미완)
-/*
-app.get("/get/naver", function(req, res) {
-    const getHtml = async () => {
-        try {
-            return await axios.get(global_urls[1]["base_url"]);//global url array
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
-    getHtml().then(html => {
-        let ulList = [];
-        const $ = cheerio.load(html.data);//cheerio init
-        console.log(html.data);
-        const $bodyList = $("div.contents").children("div.post_article").children("div.cont_post");
-        $bodyList.each(function(i, elem) {
-            ulList[i] = {
-                url: global_urls[1]["base_url"] + $(this).find("h2").find("a").attr("href"),
-                title: $(this).find("h2").find("a").text(),
-                subtitle: $(this).find("a.post_txt_wrap").children("div.post_txt").text()
-            };
-        });
-        console.log(ulList);
-        const data = ulList.filter(n => n.title);
-        return data;
-    }).then(data => {
-        res.render("naver", {
-            title: "네이버",
-            list: data
-        });
-    });
-});
-
-//coupang
-app.get("/get/coupang", function(req, res) {
-    const getHtml = async () => {
-        try {
-        	console.log("connecting to " + global_urls[2]["base_url"] + "...");
-            return await axios.get(global_urls[2]["base_url"]);//global url array
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
-    getHtml().then(html => {
-        let ulList = [];
-        console.log(html.data);
-
-        const $ = cheerio.load(html.data);//cheerio init
-        const $bodyList = $("section.u-marginTop30").children("div.row");
-        
-        $bodyList.each(function(i, elem) {
-        	console.log("loop " + i + "" + $(this).text());
-            ulList[i] = {
-                url: global_urls[1]["base_url"] + $(this).find("h2").find("a").attr("href"),
-                title: $(this).find("h2").find("a").text(),
-                subtitle: $(this).find("a.post_txt_wrap").children("div.post_txt").text()
-            };
-        });
-        const data = ulList.filter(n => n.title);
-        return data;
-    }).then(data => {
-        res.render("coupang", {
-            title: "쿠팡",
-            list: data
-        });
-    });
-});
-*/
 app.get("*", (req, res) => {
     res.end('<head><title>404</title></head><body><h1>404 Error!</h1></body>');
 });
