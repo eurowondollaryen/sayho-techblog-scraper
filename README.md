@@ -21,7 +21,7 @@
 
 ### 해결 방안
 1. 조회할 때 마다, 매번 url에 접속하는 것 보단, 주기적으로 서버에서 각 블로그를 조회해서 DB에 저장해놓은 것을 클라이언트에게 보여주는 방식으로 개선(배치)
-2. 동적인 페이지를 읽어주는 [Selenium](https://www.selenium.dev/documentation/en/) 사용 => 적용 완료
+2. 동적인 페이지를 읽어주는 [Selenium](https://www.selenium.dev/documentation/en/) 사용 => 적용 완료. 2020.11.11
 
 ## 세팅 방법
 1. 적당한 경로를 환경변수 Path에 추가한다. C:\Users\Steve\Documents\SeleniumBrowserDriver
