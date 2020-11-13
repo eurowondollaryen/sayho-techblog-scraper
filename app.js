@@ -43,6 +43,10 @@ const global_urls = [{
     "title_kr" : "NHN",
     "title_en" : "nhn",
     "base_url" : "https://meetup.toast.com/"
+}, {
+	"title_kr" : "뱅크샐러드"
+	"title_en" : "banksalad",
+	"base_url" : "https://blog.banksalad.com/tech/"
 }];
 //port set
 const port = process.env.PORT || 3000;
