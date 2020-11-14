@@ -44,7 +44,7 @@ const global_urls = [{
     "title_en" : "nhn",
     "base_url" : "https://meetup.toast.com/"
 }, {
-	"title_kr" : "뱅크샐러드"
+	"title_kr" : "뱅크샐러드",
 	"title_en" : "banksalad",
 	"base_url" : "https://blog.banksalad.com/tech/"
 }];
@@ -366,6 +366,40 @@ app.get("/get/nhn", function(req, res) {
 		}
 	})();
 });
+
+app.get("/get/banksalad", function(req, res) {
+	//selenium
+	(async function example() {
+		var data = [];
+		let driver = await new Builder().forBrowser('chrome').build();
+		try {
+			// Navigate to Url
+			await driver.get(global_urls[7]["base_url"]);
+			//wait till loaded
+			await driver.wait(until.elementLocated(By.css('div.style__BlogPostsWrapper-sc-5a1k8p-0>div.post_card>div.post_details>div.post_content')), 10000);
+			
+			let elements = await driver.findElements(By.css('div.style__BlogPostsWrapper-sc-5a1k8p-0>div.post_card>div.post_details>div.post_content'));
+			let count = 0;
+			for(let e of elements) {
+				data.push({});
+				data[count]["url"] = await e.findElement(By.css("h2>a")).getAttribute("href");
+				data[count]["title"] = await e.findElement(By.css("h2>a")).getText();
+				data[count++]["subtitle"] = await e.findElement(By.css("p")).getText();
+				//console.log(await e.getAttribute("href"));//link
+				//console.log(await e.findElement(By.css("div.sec_box>h3")).getText());//title
+				//console.log(await e.findElement(By.css("div.sec_box>p")).getText());//subtitle
+			}
+		}
+		finally{
+			driver.quit();
+			res.render("banksalad", {
+				title: "Banksalad",
+				list: data
+			});
+		}
+	})();
+});
+
 
 app.get("*", (req, res) => {
     res.end('<head><title>404</title></head><body><h1>404 Error!</h1></body>');
