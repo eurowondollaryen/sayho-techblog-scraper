@@ -47,6 +47,10 @@ const global_urls = [{
 	"title_kr" : "뱅크샐러드",
 	"title_en" : "banksalad",
 	"base_url" : "https://blog.banksalad.com/tech/"
+}, {
+	"title_kr" : "레진코믹스",
+	"title_en" : "lezhin",
+	"base_url" : "https://tech.lezhin.com/"
 }];
 //port set
 const port = process.env.PORT || 3000;
@@ -367,6 +371,7 @@ app.get("/get/nhn", function(req, res) {
 	})();
 });
 
+//banksalad
 app.get("/get/banksalad", function(req, res) {
 	//selenium
 	(async function example() {
@@ -394,6 +399,37 @@ app.get("/get/banksalad", function(req, res) {
 			driver.quit();
 			res.render("banksalad", {
 				title: "Banksalad",
+				list: data
+			});
+		}
+	})();
+});
+
+//lezhin
+app.get("/get/lezhin", function(req, res) {
+	//selenium
+	(async function example() {
+		var data = [];
+		let driver = await new Builder().forBrowser('chrome').build();
+		try {
+			// Navigate to Url
+			await driver.get(global_urls[8]["base_url"]);
+			//wait till loaded
+			await driver.wait(until.elementLocated(By.css('ul.post-list>li.post-item')), 10000);
+			
+			let elements = await driver.findElements(By.css('ul.post-list>li.post-item'));
+			let count = 0;
+			for(let e of elements) {
+				data.push({});
+				data[count]["url"] = await e.findElement(By.css("h2>a")).getAttribute("href");
+				data[count]["title"] = await e.findElement(By.css("h2>a")).getText();
+				data[count++]["subtitle"] = await e.findElement(By.css("div.post-summary")).getText();
+			}
+		}
+		finally{
+			driver.quit();
+			res.render("lezhin", {
+				title: "lezhin",
 				list: data
 			});
 		}
