@@ -51,6 +51,10 @@ const global_urls = [{
 	"title_kr" : "레진코믹스",
 	"title_en" : "lezhin",
 	"base_url" : "https://tech.lezhin.com/"
+}, {
+	"title_kr" : "카카오",
+	"title_en" : "kakao",
+	"base_url" : "https://tech.kakao.com/blog/"
 }];
 //port set
 const port = process.env.PORT || 3000;
@@ -189,9 +193,6 @@ app.get("/get/naver", function(req, res) {
 				data[count]["url"] = await e.findElement(By.css("h2>a")).getAttribute("href");
 				data[count]["title"] = await e.findElement(By.css("h2>a")).getText();
 				data[count++]["subtitle"] = await e.findElement(By.css("a.post_txt_wrap>div.post_txt")).getText();
-				//console.log(await e.findElement(By.css("h2>a")).getAttribute("href"););//url
-				//console.log(await e.findElement(By.css("h2>a")).getText());//title
-				//console.log(await e.findElement(By.css("a.post_txt_wrap>div.post_txt")).getText());//subtitle
 			}
 		}
 		finally{
@@ -224,9 +225,6 @@ app.get("/get/coupang", function(req, res) {
 				data[count]["url"] = await e.findElement(By.css("a")).getAttribute("href");
 				data[count]["title"] = await e.findElement(By.css("a>h3>div")).getText();
 				data[count++]["subtitle"] = await e.findElement(By.css("div>div")).getText();
-				console.log(await e.findElement(By.css("a")).getAttribute("href"));//url
-				console.log(await e.findElement(By.css("a>h3>div")).getText());//title
-				console.log(await e.findElement(By.css("div>div")).getText());//subtitle
 			}
 		}
 		finally{
@@ -356,9 +354,6 @@ app.get("/get/nhn", function(req, res) {
 				data[count]["url"] = await e.getAttribute("href");
 				data[count]["title"] = await e.findElement(By.css("div.sec_box>h3")).getText();
 				data[count++]["subtitle"] = await e.findElement(By.css("div.sec_box>p")).getText();
-				//console.log(await e.getAttribute("href"));//link
-				//console.log(await e.findElement(By.css("div.sec_box>h3")).getText());//title
-				//console.log(await e.findElement(By.css("div.sec_box>p")).getText());//subtitle
 			}
 		}
 		finally{
@@ -390,9 +385,6 @@ app.get("/get/banksalad", function(req, res) {
 				data[count]["url"] = await e.findElement(By.css("h2>a")).getAttribute("href");
 				data[count]["title"] = await e.findElement(By.css("h2>a")).getText();
 				data[count++]["subtitle"] = await e.findElement(By.css("p")).getText();
-				//console.log(await e.getAttribute("href"));//link
-				//console.log(await e.findElement(By.css("div.sec_box>h3")).getText());//title
-				//console.log(await e.findElement(By.css("div.sec_box>p")).getText());//subtitle
 			}
 		}
 		finally{
@@ -429,7 +421,38 @@ app.get("/get/lezhin", function(req, res) {
 		finally{
 			driver.quit();
 			res.render("lezhin", {
-				title: "lezhin",
+				title: "레진코믹스",
+				list: data
+			});
+		}
+	})();
+});
+
+//kakao
+app.get("/get/kakao", function(req, res) {
+	//selenium
+	(async function example() {
+		var data = [];
+		let driver = await new Builder().forBrowser('chrome').build();
+		try {
+			// Navigate to Url
+			await driver.get(global_urls[9]["base_url"]);
+			//wait till loaded
+			await driver.wait(until.elementLocated(By.css('div.inner_g>div.wrap_post>ul.list_post>li>a.link_post')), 10000);
+			
+			let elements = await driver.findElements(By.css('div.inner_g>div.wrap_post>ul.list_post>li>a.link_post'));
+			let count = 0;
+			for(let e of elements) {
+				data.push({});
+				data[count]["url"] = await e.getAttribute("href");
+				data[count]["title"] = await e.findElement(By.css("strong")).getText();
+				data[count++]["subtitle"] = await e.findElement(By.css("p.desc_post")).getText();
+			}
+		}
+		finally{
+			driver.quit();
+			res.render("kakao", {
+				title: "카카오",
 				list: data
 			});
 		}
