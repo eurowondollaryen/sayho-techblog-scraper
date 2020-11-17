@@ -13,7 +13,8 @@ const cheerio = require("cheerio");
 body-parser : FOR HANDLING POST DATA
 express-session : SESSION MANAGEMENT
 */
-
+//TODO : VCNC (http://engineering.vcnc.co.kr/) 추가하기
+//TODO : React.js 활용하기
 //url global object
 const global_urls = [{
     "title_kr" : "우아한형제들",
