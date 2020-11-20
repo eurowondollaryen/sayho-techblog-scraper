@@ -5,7 +5,7 @@
 - 여러 국내/외 IT 회사들의 시행착오와, 적용하는 기술, 현업에서 필요로 하는 기술 수준을 한 눈에 보고 싶어서
 
 ### 사용 기술
-- <del>Frondend : ejs</del>
+- Frondend : ejs + React.js
 - Backend : Node.js(express)
 - <del>axios (url로부터 html을 가져오는 라이브러리)</del>
 - <del>cheerio (가져온 html 데이터를 querySelector처럼 접근할 수 있게 도와주는 라이브러리)</del>
@@ -33,4 +33,3 @@
 
 ## 개발 방향
 - React.js랑 프로젝트 분리하고, 해당 프로젝트는 API 형태로 바꾸는 방향으로 - 2020.11.18
-- 한 프로젝트에 react.js랑 nodejs 같이 쓰려니까 디펜던시 관리가 너무 힘들다.
