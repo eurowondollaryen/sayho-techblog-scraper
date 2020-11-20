@@ -34,3 +34,8 @@
 ## 개발 방향
 - React.js랑 프로젝트 분리하고, 해당 프로젝트는 API 형태로 바꾸는 방향으로 - 2020.11.18
 - DB구축, Node scheduler 적용하여.. 스케쥴러로 돌아가도록 수정
+
+## Reference - Node scheduler
+- scheduler 관련 참고 자료
+- [노드 서버를 이용한 스케쥴러 구성](https://bblog.tistory.com/307)
+- [heroku scheduler with nodejs](http://www.modeo.co/blog/2015/1/8/heroku-scheduler-with-nodejs-tutorial)
