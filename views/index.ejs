@@ -2,15 +2,17 @@
   <head>
     <meta charset="UTF-8"/>
     <title>Tech Blog Web Scraper</title>
-    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/style.css">
+	<link rel="stylesheet" href="/css/bootstrap/bootstrap.min.css">
+	<script src="/js/bootstrap.bundle.min.js"></script>
   </head>
   <body>
-    <h1>Tech Blog Web Scraper</h1>
+    <h1 class="text-centered">Tech Blog Web Scraper</h1>
     <h3>by <a href="https://www.github.com/eurowondollaryen">eurowondollaryen</a></h3>
     <h4>Blog List</h4>
     <ul>
       <% for(var i = 0; i < list.length; ++i) { %>
-        <li>
+        <li class="card sahdow">
             <a href='/get/<%=list[i]["title_en"]%>'><%= list[i]["title_kr"] %></a>
         </li>
       <% } %>
