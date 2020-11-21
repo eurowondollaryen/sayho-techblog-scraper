@@ -1,25 +1,39 @@
 <!DOCTYPE html>
   <head>
     <meta charset="UTF-8"/>
-    <title>Tech Blog Web Scraper</title>
-    <link rel="stylesheet" type="text/css" href="css/bootstrap/style.css">
+    <title>Tech Blog Web Scraper</title>4
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
 	<link rel="stylesheet" href="/css/bootstrap/bootstrap.min.css">
 	<script src="/js/bootstrap.bundle.min.js"></script>
   </head>
   <body>
-    <h1 class="text-centered">Tech Blog Web Scraper</h1>
-    <h3>by <a href="https://www.github.com/eurowondollaryen">eurowondollaryen</a></h3>
-    <h4>Blog List</h4>
-    <ul>
-      <% for(var i = 0; i < list.length; ++i) { %>
-        <li class="card sahdow">
-            <a href='/get/<%=list[i]["title_en"]%>'><%= list[i]["title_kr"] %></a>
-        </li>
-      <% } %>
-    </ul>
-	<!-- We will put our React component inside this div. -->
-    <div id="like_button_container"></div>
-	
+	<div class="container">
+		<h1 style="text-align: center;" class="text-centered">Tech Blog Web Scraper</h1>
+		<h3 style="text-align: center;">by <a href="https://www.github.com/eurowondollaryen">eurowondollaryen</a></h3>
+		<h4>Blog List</h4>
+		<div class="card shadow" style="padding: 20px; margin: 15px;">
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th>순번</th>
+					<th>회사명</th>
+					<th style="text-align: right;">글 수</th>
+				</tr>
+			</thead>
+			<tbody>
+				<% for(var i = 0; i < list.length; ++i) { %>
+				<tr>
+					<td><%=i+1%></td>
+					<td><a href='/get/<%=list[i]["title_en"]%>'><%= list[i]["title_kr"] %></a></td>
+					<td style="text-align: right;">0</td>
+				</tr>
+				<% } %>
+			</tbody>
+		</table>
+		</div>
+		<!-- We will put our React component inside this div. -->
+		<p>if you like this website, press like button below <div id="like_button_container"></div></p>
+	</div>
 	<!-- Load React. -->
     <!-- Note: when deploying, replace "development.js" with "production.min.js". -->
     <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
