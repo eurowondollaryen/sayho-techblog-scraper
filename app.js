@@ -56,6 +56,10 @@ const global_urls = [{
 	"title_kr" : "카카오",
 	"title_en" : "kakao",
 	"base_url" : "https://tech.kakao.com/blog/"
+}, {
+	"title_kr" : "VCNC",
+	"title_en" : "VCNC",
+	"base_url" : "http://engineering.vcnc.co.kr/"
 }];
 //port set
 const port = process.env.PORT || 3000;
@@ -454,6 +458,37 @@ app.get("/get/kakao", function(req, res) {
 			driver.quit();
 			res.render("kakao", {
 				title: "카카오",
+				list: data
+			});
+		}
+	})();
+});
+
+//VCNC
+app.get("/get/vcnc", function(req, res) {
+	//selenium
+	(async function example() {
+		var data = [];
+		let driver = await new Builder().forBrowser('chrome').build();
+		try {
+			// Navigate to Url
+			await driver.get(global_urls[10]["base_url"]);
+			//wait till loaded
+			await driver.wait(until.elementLocated(By.css('ul.archive>li')), 10000);
+			
+			let elements = await driver.findElements(By.css('ul.archive>li'));
+			let count = 0;
+			for(let e of elements) {
+				data.push({});
+				data[count]["url"] = await e.findElement(By.css("a")).getAttribute("href");
+				data[count]["title"] = await e.findElement(By.css("a")).getText();
+				data[count++]["date"] = await e.findElement(By.css("span.posts-date")).getText();
+			}
+		}
+		finally{
+			driver.quit();
+			res.render("vcnc", {
+				title: "VCNC",
 				list: data
 			});
 		}
