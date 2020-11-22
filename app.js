@@ -13,7 +13,42 @@ const cheerio = require("cheerio");
 body-parser : FOR HANDLING POST DATA
 express-session : SESSION MANAGEMENT
 */
-//TODO : VCNC (http://engineering.vcnc.co.kr/) 추가하기
+/*
+의문점 : selenium을 활용하려면 webdriver가 필요한데,
+이거 heroku에서 세팅 가능한지? putty같은걸로 접속 되는지 확인해보기
+https://devcenter.heroku.com/articles/heroku-cli-commands
+*/
+/*
+TODO : Node scheduler 적용하기
+https://bblog.tistory.com/307
+*/
+/*
+TODO : postgres 적용
+npm i pg --save //=> done
+
+const { Client } = require('pg');
+
+const client = new Client({
+    user : 'DB 사용자명',
+    host : 'DB주소',
+    database : 'DB명',
+    password : '비번',
+    port : 5432
+});
+
+client.connect();
+
+const sql = "INSERT INTO userList (id, name, nickname, email, password, favorite_type, favorite_country) VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING *";
+const values = ['id', 'name', 'nickname', 'email', 'pw', 'favorite_type', 'favorite_country'];
+
+client.query(sql, values, (err, res) => {
+    if (err) {
+        console.log(err.stack)
+    } else {
+        console.log(res.rows[0]);//RES는 Object를 담은 array
+    }
+});
+*/
 //TODO : React.js 활용하기
 //url global object
 const global_urls = [{
