@@ -34,7 +34,7 @@ https://bblog.tistory.com/307
 3. 페이지 출력은 /page/xxxx에서 ejs로 출력, request 받으면 db조회해오는 방식으로
 */
 
-//******* DATABASE CONNECTION START *******
+/******* DATABASE CONNECTION START *******/
 /*
 node js - pg => pool, client 차이는?
 spring에서 db connection pool 사용하는 이유와 같다.
@@ -71,7 +71,7 @@ pool.connect((err, client, done) => {
 	});
 });
 */
-//******* DATABASE CONNECTION START *******
+/******* DATABASE CONNECTION START *******/
 
 
 //url global object
@@ -597,6 +597,7 @@ app.get("/get/vcnc", function(req, res) {
 		}
 	})();
 });
+//todo : complete this. 2020.11.24
 for(var i = 0; i < global_urls.length; ++i) {
 	app.get("/page/" + global_urls[i]["route"], function(req, res) {
 		console.log(req);
