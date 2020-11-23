@@ -21,79 +21,111 @@ https://devcenter.heroku.com/articles/heroku-cli-commands
 /*
 TODO : Node scheduler 적용하기
 https://bblog.tistory.com/307
+
 */
+
 /*
-TODO : postgres 적용
-npm i pg --save //=> done
-
-const { Client } = require('pg');
-
-const client = new Client({
-    user : 'DB 사용자명',
-    host : 'DB주소',
-    database : 'DB명',
-    password : '비번',
-    port : 5432
-});
-
-client.connect();
-
-const sql = "INSERT INTO userList (id, name, nickname, email, password, favorite_type, favorite_country) VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING *";
-const values = ['id', 'name', 'nickname', 'email', 'pw', 'favorite_type', 'favorite_country'];
-
-client.query(sql, values, (err, res) => {
-    if (err) {
-        console.log(err.stack)
-    } else {
-        console.log(res.rows[0]);//RES는 Object를 담은 array
-    }
-});
+2020.11.23
+일단 API형태로 만들긴 함.
+하지만  SELENIUM으로 긁어온걸 API로 만든거고, DB에서 불러와야 함.
+그러므로 할 일은 크게 두가지임.
+1. 스케쥴러로 DB에 넣는 로직 구현
+2. API는 DB에서 조회해오는 방식
+3. 페이지 출력은 /page/xxxx에서 ejs로 출력, request 받으면 db조회해오는 방식으로
 */
-//TODO : React.js 활용하기
+
+//******* DATABASE CONNECTION START *******
+//require("./aaa.js")는 해당 js파일의 module.exports에 접근한다.
+const dbConfig = require("./const.js");
+const { Pool } = require('pg');
+
+const pool = new Pool(dbConfig);
+/*
+node js - pg => pool, client 차이는?
+db connection pool 사용하는 이유와 같다.
+재접속 필요없으므로
+https://node-postgres.com/features/pooling
+*/
+//pool error check
+pool.on("error", (err, client) => {
+	console.error("Unexpected error on idle client", err);
+	process.exit(-1);
+});
+
+const sql = "SELECT * FROM PG_TABLES WHERE SCHEMANAME = $1";
+
+const values = ['public'];
+
+pool.connect((err, client, done) => {
+	if(err) throw err;
+	client.query(sql, values, (err, res) => {
+		done();
+		
+		if(err) {
+			console.log(err.stack);
+		} else {
+			console.log(res.rows[0]);
+		}
+	});
+});
+//******* DATABASE CONNECTION START *******
+
+
 //url global object
 const global_urls = [{
     "title_kr" : "우아한형제들",
     "title_en" : "wooahan",
+	"route"    : "wooahan",
     "base_url" : "https://woowabros.github.io"
 }, {
 	"title_kr" : "네이버",
     "title_en" : "naver",
+	"route"    : "naver",
     "base_url" : "https://d2.naver.com/home"
 }, {
 	"title_kr" : "쿠팡",
     "title_en" : "coupang",
+	"route"    : "coupang",
     "base_url" : "https://medium.com/coupang-tech/technote/home"
 }, {
 	"title_kr" : "스포카",
     "title_en" : "spoqa",
+	"route"    : "spoqa",
     "base_url" : "https://spoqa.github.io/"
 }, {
     "title_kr" : "라인",
     "title_en" : "line",
+	"route"    : "line",
     "base_url" : "https://engineering.linecorp.com/ko/blog/"
 }, {
     "title_kr" : "구글",
     "title_en" : "google",
+	"route"    : "google",
     "base_url" : "https://developers.googleblog.com/"
 }, {
     "title_kr" : "NHN",
     "title_en" : "nhn",
+	"route"    : "nhn",
     "base_url" : "https://meetup.toast.com/"
 }, {
 	"title_kr" : "뱅크샐러드",
 	"title_en" : "banksalad",
+	"route"    : "banksalad",
 	"base_url" : "https://blog.banksalad.com/tech/"
 }, {
 	"title_kr" : "레진코믹스",
 	"title_en" : "lezhin",
+	"route"    : "lezhin",
 	"base_url" : "https://tech.lezhin.com/"
 }, {
 	"title_kr" : "카카오",
 	"title_en" : "kakao",
+	"route"    : "kakao",
 	"base_url" : "https://tech.kakao.com/blog/"
 }, {
 	"title_kr" : "VCNC",
 	"title_en" : "VCNC",
+	"route"    : "vcnc",
 	"base_url" : "http://engineering.vcnc.co.kr/"
 }];
 //port set
@@ -175,10 +207,10 @@ app.get("/", function(req, res) {
 
 //wooahan web scrapping
 /*
-load : 인자로 html 문자열을 받아 cheerio 객체를 반환합니다.
-children : 인자로 html selector를 문자열로 받아 cheerio 객체에서 선택된 html 문자열에서 해당하는 모든 태그들의 배열을 반환합니다.
-each : 인자로 콜백 함수를 받아 태그들의 배열을 순회 하면서 콜백함수를 실행합니다.
-find : 인자로 html selector 를 문자열로 받아 해당하는 태그를 반환합니다.
+return json from express
+res.send(object)
+res.json(object)
+res.send(string)
 */
 app.get("/get/wooahan", function(req, res) {
     const getHtml = async () => {
@@ -206,10 +238,13 @@ app.get("/get/wooahan", function(req, res) {
         const data = ulList.filter(n => n.title);
         return data;
     }).then(data => {
+		res.json(data);
+		/*
         res.render("wooahan", {
             title: "우아한형제들",
             list: data
         });
+		*/
     });
 });
 
@@ -227,7 +262,7 @@ app.get("/get/naver", function(req, res) {
 			
 			let elements = await driver.findElements(By.css('div.contents>div.post_article>div.cont_post'));
 			let count = 0;
-			console.log(elements.length);
+			
 			for(let e of elements) {
 				data.push({});
 				data[count]["url"] = await e.findElement(By.css("h2>a")).getAttribute("href");
@@ -237,10 +272,13 @@ app.get("/get/naver", function(req, res) {
 		}
 		finally{
 			driver.quit();
+			res.json(data);
+			/*
 			res.render("naver", {
 				title: "네이버",
 				list: data
 			});
+			*/
 		}
 	})();
 });
@@ -259,7 +297,7 @@ app.get("/get/coupang", function(req, res) {
 			
 			let elements = await driver.findElements(By.css('section.u-marginTop30>div.row>div.col>div.col'));
 			let count = 0;
-			console.log(elements.length);
+			
 			for(let e of elements) {
 				data.push({});
 				data[count]["url"] = await e.findElement(By.css("a")).getAttribute("href");
@@ -269,10 +307,13 @@ app.get("/get/coupang", function(req, res) {
 		}
 		finally{
 			driver.quit();
+			res.json(data);
+			/*
 			res.render("coupang", {
 				title: "쿠팡",
 				list: data
 			});
+			*/
 		}
 	})();
 });
@@ -303,10 +344,13 @@ app.get("/get/spoqa", function(req, res) {
         const data = ulList.filter(n => n.title);
         return data;
     }).then(data => {
+		res.json(data);
+		/*
         res.render("spoqa", {
             title: "스포카",
             list: data
         });
+		*/
     });
 });
 
@@ -336,10 +380,13 @@ app.get("/get/line", function(req, res) {
         const data = ulList.filter(n => n.title);
         return data;
     }).then(data => {
+		res.json(data);
+		/*
         res.render("line", {
             title: "라인",
             list: data
         });
+		*/
     });
 });
 
@@ -369,10 +416,13 @@ app.get("/get/google", function(req, res) {
         const data = ulList.filter(n => n.title);
         return data;
     }).then(data => {
+		res.json(data);
+		/*
         res.render("google", {
             title: "구글",
             list: data
         });
+		*/
     });
 });
 
@@ -398,10 +448,13 @@ app.get("/get/nhn", function(req, res) {
 		}
 		finally{
 			driver.quit();
+			res.json(data);
+			/*
 			res.render("nhn", {
 				title: "NHN",
 				list: data
 			});
+			*/
 		}
 	})();
 });
@@ -429,10 +482,13 @@ app.get("/get/banksalad", function(req, res) {
 		}
 		finally{
 			driver.quit();
+			res.json(data);
+			/*
 			res.render("banksalad", {
 				title: "Banksalad",
 				list: data
 			});
+			*/
 		}
 	})();
 });
@@ -460,10 +516,13 @@ app.get("/get/lezhin", function(req, res) {
 		}
 		finally{
 			driver.quit();
+			res.json(data);
+			/*
 			res.render("lezhin", {
 				title: "레진코믹스",
 				list: data
 			});
+			*/
 		}
 	})();
 });
@@ -491,10 +550,13 @@ app.get("/get/kakao", function(req, res) {
 		}
 		finally{
 			driver.quit();
+			res.json();
+			/*
 			res.render("kakao", {
 				title: "카카오",
 				list: data
 			});
+			*/
 		}
 	})();
 });
@@ -522,13 +584,25 @@ app.get("/get/vcnc", function(req, res) {
 		}
 		finally{
 			driver.quit();
+			res.json();
+			/*
 			res.render("vcnc", {
 				title: "VCNC",
 				list: data
 			});
+			*/
 		}
 	})();
 });
+for(var i = 0; i < global_urls.length; ++i) {
+	app.get("/page/" + global_urls[i]["route"], function(req, res) {
+		console.log(req);
+		res.render(global_urls[i]["route"], {
+			
+		});
+	});
+}
+
 
 
 app.get("*", (req, res) => {

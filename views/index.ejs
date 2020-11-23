@@ -1,7 +1,7 @@
 <!DOCTYPE html>
   <head>
     <meta charset="UTF-8"/>
-    <title>Tech Blog Web Scraper</title>4
+    <title>Tech Blog Web Scraper</title>
     <link rel="stylesheet" type="text/css" href="/css/style.css">
 	<link rel="stylesheet" href="/css/bootstrap/bootstrap.min.css">
 	<script src="/js/bootstrap.bundle.min.js"></script>
@@ -24,7 +24,7 @@
 				<% for(var i = 0; i < list.length; ++i) { %>
 				<tr>
 					<td><%=i+1%></td>
-					<td><a href='/get/<%=list[i]["title_en"]%>'><%= list[i]["title_kr"] %></a></td>
+					<td><a href='/page/<%=list[i]["title_en"]%>'><%= list[i]["title_kr"] %></a></td>
 					<td style="text-align: right;">0</td>
 				</tr>
 				<% } %>
