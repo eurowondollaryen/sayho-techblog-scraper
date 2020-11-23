@@ -35,17 +35,19 @@ https://bblog.tistory.com/307
 */
 
 //******* DATABASE CONNECTION START *******
+/*
+node js - pg => pool, client 차이는?
+spring에서 db connection pool 사용하는 이유와 같다.
+재접속 필요없으므로
+https://node-postgres.com/features/pooling
+*/
+/*
 //require("./aaa.js")는 해당 js파일의 module.exports에 접근한다.
 const dbConfig = require("./const.js");
 const { Pool } = require('pg');
 
 const pool = new Pool(dbConfig);
-/*
-node js - pg => pool, client 차이는?
-db connection pool 사용하는 이유와 같다.
-재접속 필요없으므로
-https://node-postgres.com/features/pooling
-*/
+
 //pool error check
 pool.on("error", (err, client) => {
 	console.error("Unexpected error on idle client", err);
@@ -68,6 +70,7 @@ pool.connect((err, client, done) => {
 		}
 	});
 });
+*/
 //******* DATABASE CONNECTION START *******
 
 
