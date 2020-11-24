@@ -597,15 +597,20 @@ app.get("/get/vcnc", function(req, res) {
 		}
 	})();
 });
+/*
+(async function example() {
 //todo : complete this. 2020.11.24
 for(var i = 0; i < global_urls.length; ++i) {
 	app.get("/page/" + global_urls[i]["route"], function(req, res) {
-		console.log(req);
+		//console.log(req);
 		res.render(global_urls[i]["route"], {
-			
+			title: global_urls[i]["title_kr"]
 		});
 	});
 }
+})();
+*/
+
 
 
 
