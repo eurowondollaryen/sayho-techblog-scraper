@@ -186,9 +186,36 @@ https://www.selenium.dev/documentation/en/getting_started_with_webdriver/locatin
 
 const {Builder, By, Key, until} = require("selenium-webdriver");
 
+//각 회사의 포스트를 크롤링하여 DB에 넣는 함수
+var scraping = function(company) {
+	if(company == "wooahan") {
+		
+	} else if(company == "naver") {
+		
+	} else if(company == "coupang") {
+		
+	} else if(company == "spoqa") {
+		
+	} else if(company == "line") {
+		
+	} else if(company == "google") {
+		
+	} else if(company == "nhn") {
+		
+	} else if(company == "banksalad") {
+		
+	} else if(company == "lezhin") {
+		
+	} else if(company == "kakao") {
+		
+	} else if(company == "vcnc") {
+		
+	} else {
+		console.log("company name not exists");
+	}
+};
 
-
-
+//메인화면
 app.get("/", function(req, res) {
     //page rendering method 1. read file and render its text (very primitive)
     /*
@@ -208,6 +235,8 @@ app.get("/", function(req, res) {
     });
 });
 
+
+/* SCRAPING LOGIC */
 //wooahan web scrapping
 /*
 return json from express
