@@ -235,6 +235,10 @@ app.get("/", function(req, res) {
     });
 });
 
+app.get("/page/*", function(req, res) {
+	console.log(req);
+});
+
 
 /* SCRAPING LOGIC */
 //wooahan web scrapping
