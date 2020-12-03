@@ -9,8 +9,8 @@ app.js로부터 express()를 통해 생성한 app 인자값을 넘겨받아
 var posts = require("./controllers/mainController.js");
 
 exports.route = function(app) {
-	app.get("/", posts.list);
-	app.post("/create", posts.create);
-	app.post("/update", posts.update);
-	app.post("/remove", posts.remove);
+	//app.get("/", posts.list);
+	app.get("/create", posts.create);
+	app.get("/update", posts.update);
+	app.get("/remove", posts.remove);
 };

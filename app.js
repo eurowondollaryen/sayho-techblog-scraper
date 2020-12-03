@@ -215,6 +215,7 @@ var scraping = function(company) {
 	}
 };
 
+require("./router.js").route(app);
 //메인화면
 app.get("/", function(req, res) {
     //page rendering method 1. read file and render its text (very primitive)
