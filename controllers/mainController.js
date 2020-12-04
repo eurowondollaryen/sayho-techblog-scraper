@@ -12,3 +12,10 @@ exports.update = function(req, res) {
 exports.remove = function(req, res) {
 	console.log("remove");
 };
+exports.getPosts = function(req, res) {
+	//console.log(req);
+	//console.log(req.body);
+	console.log("request data : " + req.param("company"));
+	//TODO : 여기서 db 조회해서
+	//TODO : 결과값으로 page rendering
+};

@@ -9,6 +9,8 @@ npm install --save axios cheerio
 */
 const axios = require("axios");
 const cheerio = require("cheerio");
+const bodyParser = require("body-parser");
+
 /*
 body-parser : FOR HANDLING POST DATA
 express-session : SESSION MANAGEMENT
@@ -142,6 +144,9 @@ app.engine("html", require("ejs").renderFile);
 //use public directory
 app.use(express.static(path.join(__dirname,'/public')));
 
+//use body parser
+app.use(bodyParser.urlencoded({extended : false}));
+app.use(bodyParser.json());
 //run server
 app.listen(port, function(){
            console.log('Server is running on  port ' + port);

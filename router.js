@@ -13,4 +13,5 @@ exports.route = function(app) {
 	app.get("/create", posts.create);
 	app.get("/update", posts.update);
 	app.get("/remove", posts.remove);
+	app.get("/page", posts.getPosts);
 };
