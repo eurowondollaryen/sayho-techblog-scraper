@@ -26,6 +26,14 @@ app.engine("html", require("ejs").renderFile);
 //use public directory
 app.use(express.static(path.join(__dirname,'/public')));
 
+// CORS
+app.all('/*', (req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  next();
+});
+
 //use body-parser
 app.use(bodyParser.urlencoded({extended : false}));
 app.use(bodyParser.json());
@@ -54,20 +62,11 @@ spring에서 db connection pool 사용하는 이유와 같다.
 재접속 필요없으므로
 https://node-postgres.com/features/pooling
 */
+
+//db setting
+require("./db.js").connect();
+
 /*
-//require("./aaa.js")는 해당 js파일의 module.exports에 접근한다.
-
-const dbConfig = require("./db.js");
-const { Pool } = require('pg');
-
-const pool = new Pool(dbConfig);
-
-//pool error check
-pool.on("error", (err, client) => {
-	console.error("Unexpected error on idle client", err);
-	process.exit(-1);
-});
-
 const sql = "SELECT * FROM PG_TABLES WHERE SCHEMANAME = $1";
 
 const values = ['public'];
@@ -76,7 +75,6 @@ pool.connect((err, client, done) => {
 	if(err) throw err;
 	client.query(sql, values, (err, res) => {
 		done();
-		
 		if(err) {
 			console.log(err.stack);
 		} else {
@@ -85,8 +83,6 @@ pool.connect((err, client, done) => {
 	});
 });
 */
-/******* DATABASE CONNECTION START *******/
-
 
 //url global object
 const global_urls = [{

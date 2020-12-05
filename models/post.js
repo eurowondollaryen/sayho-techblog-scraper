@@ -3,6 +3,15 @@ post.js
 블로그 포스트 목록을 핸들링한다.
 TODO : 현재는 하드코딩되어있지만, DB에서 가져오기
 */
+const { Pool } = require('pg');
+const pool = new Pool({
+	user : "postgres",
+	host : "127.0.0.1",
+	database : "postgres",
+	password : "root##3804",
+	port : "5432"
+});
+
 exports.getPostList = function() {
 	var postList = [
 		{

@@ -6,11 +6,3 @@ const dbConfig = {
 	port : "5432"
 };
 module.exports = dbConfig;
-/*
-1) get postgresql db name
-: \l
-: select datname from pg_database;
-
-2) show table list in postgresql
-select * from pg_tables where schemaname = 'public';
-*/

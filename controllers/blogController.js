@@ -20,15 +20,16 @@ const remove = function(req, res) {
 const getBlogList = function(req, res) {
 	//console.log(req);
 	//console.log(req.body);
-	console.log(blog.getBlogList()[0].a);
 	console.log("request data : " + req.param("company"));
 	res.end(blog.getBlogList());
 	return blog.getBlogList();
 };
 
-const printBlogList = function(req, res) {
+const printBlogList = async function(req, res) {
+	var list = blog.getBlogList();
+	console.log(list);
 	res.render("index", {
-		list : blog.getBlogList()
+		list : list
 	});
 };
 
