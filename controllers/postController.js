@@ -1,18 +1,22 @@
 var post = require("../models/post.js");
-exports.list = function(req, res) {
+
+const list = function(req, res) {
 	console.log("list");
 };
 
-exports.create = function(req, res) {
+const create = function(req, res) {
 	console.log("create");
 };
-exports.update = function(req, res) {
+
+const update = function(req, res) {
 	console.log("update");
 };
-exports.remove = function(req, res) {
+
+const remove = function(req, res) {
 	console.log("remove");
 };
-exports.getPostList = function(req, res) {
+
+const getPostList = function(req, res) {
 	//console.log(req);
 	//console.log(req.body);
 	console.log(post.getPostList()[0].a);
@@ -20,3 +24,10 @@ exports.getPostList = function(req, res) {
 	//TODO : 여기서 db 조회해서
 	//TODO : 결과값으로 page rendering
 };
+
+//export controller functions
+exports.list = list;
+exports.create = create;
+exports.update = update;
+exports.remove = remove;
+exports.getPostList = getPostList;

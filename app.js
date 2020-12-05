@@ -2,19 +2,40 @@ var express = require("express");
 var app = express();
 var fs = require("fs");
 var path = require("path");
-//axios : get html from url
-//cheerio : use queryselector
-/* 
-npm install --save axios cheerio
-*/
-const axios = require("axios");
-const cheerio = require("cheerio");
+
+//body-parser : FOR HANDLING POST DATA
 const bodyParser = require("body-parser");
 
-/*
-body-parser : FOR HANDLING POST DATA
-express-session : SESSION MANAGEMENT
-*/
+//axios : get html from url
+//cheerio : use queryselector
+//npm install --save axios cheerio
+const axios = require("axios");
+const cheerio = require("cheerio");
+
+//selenium
+const {Builder, By, Key, until} = require("selenium-webdriver");
+
+//port set
+const port = process.env.PORT || 3000;
+
+//ejs init
+app.set("views", __dirname + "/views");
+app.set("view engine", "ejs");
+app.engine("html", require("ejs").renderFile);
+
+//use public directory
+app.use(express.static(path.join(__dirname,'/public')));
+
+//use body-parser
+app.use(bodyParser.urlencoded({extended : false}));
+app.use(bodyParser.json());
+
+//run server
+app.listen(port, function(){
+    console.log('Server is running on  port ' + port);
+});
+
+
 /*
 의문점 : selenium을 활용하려면 webdriver가 필요한데,
 이거 heroku에서 세팅 가능한지? putty같은걸로 접속 되는지 확인해보기
@@ -26,16 +47,6 @@ https://bblog.tistory.com/307
 
 */
 
-/*
-2020.11.23
-일단 API형태로 만들긴 함.
-하지만  SELENIUM으로 긁어온걸 API로 만든거고, DB에서 불러와야 함.
-그러므로 할 일은 크게 두가지임.
-1. 스케쥴러로 DB에 넣는 로직 구현
-2. API는 DB에서 조회해오는 방식
-3. 페이지 출력은 /page/xxxx에서 ejs로 출력, request 받으면 db조회해오는 방식으로
-*/
-
 /******* DATABASE CONNECTION START *******/
 /*
 node js - pg => pool, client 차이는?
@@ -45,7 +56,8 @@ https://node-postgres.com/features/pooling
 */
 /*
 //require("./aaa.js")는 해당 js파일의 module.exports에 접근한다.
-const dbConfig = require("./const.js");
+
+const dbConfig = require("./db.js");
 const { Pool } = require('pg');
 
 const pool = new Pool(dbConfig);
@@ -133,24 +145,7 @@ const global_urls = [{
 	"route"    : "vcnc",
 	"base_url" : "http://engineering.vcnc.co.kr/"
 }];
-//port set
-const port = process.env.PORT || 3000;
 
-//ejs init
-app.set("views", __dirname + "/views");
-app.set("view engine", "ejs");
-app.engine("html", require("ejs").renderFile);
-
-//use public directory
-app.use(express.static(path.join(__dirname,'/public')));
-
-//use body parser
-app.use(bodyParser.urlencoded({extended : false}));
-app.use(bodyParser.json());
-//run server
-app.listen(port, function(){
-           console.log('Server is running on  port ' + port);
-});
 
 //for testing body-parser and express-session
 /*
@@ -189,7 +184,7 @@ selenium documentation
 https://www.selenium.dev/documentation/en/getting_started_with_webdriver/locating_elements/
 */
 
-const {Builder, By, Key, until} = require("selenium-webdriver");
+
 
 //각 회사의 포스트를 크롤링하여 DB에 넣는 함수
 var scraping = function(company) {
@@ -221,25 +216,7 @@ var scraping = function(company) {
 };
 
 require("./router.js").route(app);
-//메인화면
-app.get("/", function(req, res) {
-    //page rendering method 1. read file and render its text (very primitive)
-    /*
-    fs.readFile("index.html", function(error, data) {
-        if(error) {
-            console.log(error);
-        }
-        else {
-            res.writeHead(200,{"Content-Type":"text/html"});//set headtype
-            res.end(data);
-        }
-    });
-    */
-    //page rendering method 2. use render(EJS view resolver)
-    res.render("index", {
-        list : global_urls
-    });
-});
+
 
 app.get("/page/*", function(req, res) {
 	console.log(req.url);
