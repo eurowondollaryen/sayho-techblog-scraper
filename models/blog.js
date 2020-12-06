@@ -7,13 +7,17 @@ TODO : 현재는 하드코딩되어있지만, DB에서 가져오기
 //const pool = new Pool();
 const pool = require('../db.js').pool;
 exports.getBlogList = async function() {
-	var rows = [];
+	var result = [];
+	/*
 	await pool.query("SELECT * FROM ICTBLOGS", (err, res) => {
 		if(err) {
 			return console.error("Error executing query", err.stack);
 		}
-		rows = res.rows;
-		console.log(rows[0]);
+		result = res.rows;
+		return res.rows;
 	});
-	return rows;
-};
+	*/
+	await pool.query("SELECT * FROM ICTBLOGS")
+	.then(function(res) { result = res.rows; });
+	return result;
+}
