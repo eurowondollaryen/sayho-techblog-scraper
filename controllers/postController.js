@@ -16,13 +16,14 @@ const remove = function(req, res) {
 	console.log("remove");
 };
 
-const getPostList = function(req, res) {
-	//console.log(req);
-	//console.log(req.body);
-	console.log(post.getPostList()[0].a);
-	console.log("request data : " + req.param("company"));
-	//TODO : 여기서 db 조회해서
-	//TODO : 결과값으로 page rendering
+const getPostList = async function(req, res) {
+	console.log("[postController][getPostList]request data : " + req.param("company"));
+	
+	var parameters = [req.param("company")];
+	var list = await post.getPostList(parameters);
+	res.render(req.param("company"), {
+		list: list
+	});
 };
 
 //export controller functions

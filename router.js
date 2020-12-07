@@ -19,6 +19,7 @@ exports.route = function(app) {
 	app.get("/updatePost", postController.update);
 	app.get("/removePost", postController.remove);
 	app.get("/postList", postController.getPostList);
+	
 	//blog route
 	app.get("/createBlog", blogController.create);
 	app.get("/updateBlog", blogController.update);
