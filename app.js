@@ -64,7 +64,7 @@ https://node-postgres.com/features/pooling
 */
 
 //db setting
-//require("./db.js").connect();
+require("./db.js").connect();
 
 /*
 const sql = "SELECT * FROM PG_TABLES WHERE SCHEMANAME = $1";
