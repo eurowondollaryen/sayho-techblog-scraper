@@ -6,7 +6,8 @@ TODO : 현재는 하드코딩되어있지만, DB에서 가져오기
 const pool = require('../db.js').pool;
 exports.getPostList = async function(parameters) {
 	var list = [];
-	await pool.query("SELECT * FROM ICTPOSTS WHERE BLOG_ID = (SELECT BLOG_ID FROM ICTBLOGS WHERE ROUTE = $1)", parameters)
+	await pool.query("SELECT POST_SEQ, TITLE, (SELECT BASE_URL FROM ICTBLOGS WHERE ROUTE = $1)||POST_URL AS URL,"
+	+ " SUBTITLE, AUTHOR, NOTE_DTL, INST_DT FROM ICTPOSTS WHERE BLOG_ID = (SELECT BLOG_ID FROM ICTBLOGS WHERE ROUTE = $1)", parameters)
 	.then(function(res) { list = res.rows; });
 	return list;
 }

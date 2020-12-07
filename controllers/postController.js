@@ -1,4 +1,5 @@
 var post = require("../models/post.js");
+var blog = require("../models/blog.js");
 
 const list = function(req, res) {
 	console.log("list");
@@ -21,7 +22,9 @@ const getPostList = async function(req, res) {
 	
 	var parameters = [req.param("company")];
 	var list = await post.getPostList(parameters);
+	var blogInfo = await blog.getBlogId(parameters);
 	res.render(req.param("company"), {
+		title: blogInfo[0]["title_kr"],
 		list: list
 	});
 };

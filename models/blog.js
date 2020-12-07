@@ -8,16 +8,14 @@ TODO : 현재는 하드코딩되어있지만, DB에서 가져오기
 const pool = require('../db.js').pool;
 exports.getBlogList = async function() {
 	var result = [];
-	/*
-	await pool.query("SELECT * FROM ICTBLOGS", (err, res) => {
-		if(err) {
-			return console.error("Error executing query", err.stack);
-		}
-		result = res.rows;
-		return res.rows;
-	});
-	*/
 	await pool.query("SELECT * FROM ICTBLOGS")
 	.then(function(res) { result = res.rows; });
+	return result;
+}
+
+exports.getBlogId = async function(parameters) {
+	var result = [];
+	await pool.query("SELECT TITLE_KR, TITLE_EN, BASE_URL FROM ICTBLOGS WHERE ROUTE = $1", parameters)
+	.then(function(res) { result = res.rows; } );
 	return result;
 }
