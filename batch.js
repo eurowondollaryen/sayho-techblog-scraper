@@ -24,7 +24,7 @@ var initGlobal = async function() {
 //2. 각 회사의 포스트를 크롤링하여 DB에 insert한다.
 var scraping = async function() {
 		console.log("getting initial data...");
-		await initGlobal();
+		await initGlobal();//초기데이터 가져오는데 성공!
 		console.log(global_urls);
 		console.log("batch start!!");
 		
@@ -51,7 +51,7 @@ var scraping = async function() {
 			finally{
 				console.log(data);
 				driver.quit();
-				//TODO : db에 넣어주기
+				//TODO : SELENIUM으로 조회된 OBJECT 배열을 DB에서 조회해온 내용과 비교하여, UPDATE OR INSERT
 			}
 		})();
 };
