@@ -181,53 +181,10 @@ https://www.selenium.dev/documentation/en/getting_started_with_webdriver/locatin
 */
 
 
-
-//각 회사의 포스트를 크롤링하여 DB에 넣는 함수
-var scraping = function(company) {
-	if(company == "wooahan") {
-		
-	} else if(company == "naver") {
-		
-	} else if(company == "coupang") {
-		
-	} else if(company == "spoqa") {
-		
-	} else if(company == "line") {
-		
-	} else if(company == "google") {
-		
-	} else if(company == "nhn") {
-		
-	} else if(company == "banksalad") {
-		
-	} else if(company == "lezhin") {
-		
-	} else if(company == "kakao") {
-		
-	} else if(company == "vcnc") {
-		
-	} else {
-		console.log("company name not exists");
-	}
-};
-
 require("./router.js").route(app);
-
-
-app.get("/page/*", function(req, res) {
-	console.log(req.url);
-	
-});
-
 
 /* SCRAPING LOGIC */
 //wooahan web scrapping
-/*
-return json from express
-res.send(object)
-res.json(object)
-res.send(string)
-*/
 app.get("/get/wooahan", function(req, res) {
     const getHtml = async () => {
         try {
@@ -610,22 +567,6 @@ app.get("/get/vcnc", function(req, res) {
 		}
 	})();
 });
-/*
-(async function example() {
-//todo : complete this. 2020.11.24
-for(var i = 0; i < global_urls.length; ++i) {
-	app.get("/page/" + global_urls[i]["route"], function(req, res) {
-		//console.log(req);
-		res.render(global_urls[i]["route"], {
-			title: global_urls[i]["title_kr"]
-		});
-	});
-}
-})();
-*/
-
-
-
 
 app.get("*", (req, res) => {
     res.end('<head><title>404</title></head><body><h1>404 Error!</h1></body>');
