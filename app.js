@@ -15,6 +15,15 @@ const cheerio = require("cheerio");
 //selenium
 const {Builder, By, Key, until} = require("selenium-webdriver");
 
+//node-schedule
+//매일 자정에 scraping작업을 한다.
+//reference : https://bblog.tistory.com/307
+var schedule = require("node-schedule");
+const batch = require("./batch.js");
+var scheduler = schedule.scheduleJob("00 00 00 * * *", function() {
+	batch.scraping();
+});
+
 //port set
 const port = process.env.PORT || 3000;
 
@@ -48,11 +57,6 @@ app.listen(port, function(){
 의문점 : selenium을 활용하려면 webdriver가 필요한데,
 이거 heroku에서 세팅 가능한지? putty같은걸로 접속 되는지 확인해보기
 https://devcenter.heroku.com/articles/heroku-cli-commands
-*/
-/*
-TODO : Node scheduler 적용하기
-https://bblog.tistory.com/307
-
 */
 
 /******* DATABASE CONNECTION START *******/
@@ -182,6 +186,10 @@ https://www.selenium.dev/documentation/en/getting_started_with_webdriver/locatin
 
 
 require("./router.js").route(app);
+
+app.get("/batchtest", function(req, res) {
+	batch.scraping();
+});
 
 /* SCRAPING LOGIC */
 //wooahan web scrapping
