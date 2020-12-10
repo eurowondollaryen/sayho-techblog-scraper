@@ -29,6 +29,27 @@ options.addArguments("--no-sandbox");
 
 
 var global_urls = [];
+
+//selenium으로 조회된 object를 가지고 merge into 해주는 함수
+var postMerge = async function(postObj) {
+	var queryStr = "WITH UPSERT AS (UPDATE ICTPOSTS \n"
+	+ "SET UPDT_DT = TO_CHAR(NOW(),'YYYYMMDD') \n"
+	+ "WHERE BLOG_ID = '" + postObj["blog_id"] + "' \n"
+	+ "AND TITLE = '" + postObj["title"] + "' RETURNING *)\n"
+	+ "INSERT INTO ICTPOSTS(BLOG_ID, POST_SEQ, TITLE, POST_URL, SUBTITLE, AUTHOR, NOTE_DTL, INST_DT) \n"
+	+ "SELECT '" + postObj["blog_id"] + "' \n"
+	+ ",(SELECT COUNT(*) FROM ICTBLOGS WHERE BLOG_ID = '" + postObj["blog_id"] + "')+1\n"
+	+ ",'" + postObj["title"] + "'\n"
+	+ ",'" + postObj["post_url"] + "'\n"
+	+ ",'" + postObj["subtitle"] + "'\n"
+	+ ",'" + postObj["author"] + "'\n"
+	+ ",'" + postObj["note_dtl"] + "'\n"
+	+ ",TO_CHAR(NOW(), 'YYYYMMDD') \n"
+	+ "WHERE NOT EXISTS(SELECT * FROM UPSERT)";
+	console.log(queryStr);
+	await pool.query(queryStr);
+};
+
 //1. 블로그 정보를 모두 가져온다.
 var initGlobal = async function() {
 	await pool.query("SELECT BLOG_ID, TITLE_KR, ROUTE, BASE_URL"
@@ -53,6 +74,36 @@ var scraping = async function() {
 		for(var i = 0; i < global_urls.length; ++i) {
 			var blog_id = global_urls[i]["blog_id"];
 			if(blog_id == "1001") {
+				//1.wooahan
+				/*
+				const getHtml = async () => {
+					try {
+						return await axios.get(global_urls[0]["base_url"]);//global url array
+					} catch (error) {
+						console.error(error);
+					}
+				};
+
+				getHtml().then(html => {
+					let ulList = [];
+					const $ = cheerio.load(html.data);//cheerio init
+					const $bodyList = $("div.list").children("div.list-module");
+
+					$bodyList.each(function(i, elem) {
+						ulList[i] = {
+							author: $(this).find("span.post-meta").text(),
+							url: global_urls[0]["base_url"] + $(this).find("a").attr("href"),
+							title: $(this).find("a").children("h2.post-link").text(),
+							subtitle: $(this).find("a").children("p.post-description").text()
+						};
+					});
+					console.log(ulList);
+					const data = ulList.filter(n => n.title);
+					return data;
+				}).then(data => {
+					res.json(data);
+				});
+				*/
 				
 			} else if (blog_id == "1002") {
 				//2. naver
@@ -69,16 +120,24 @@ var scraping = async function() {
 						
 						for(let e of elements) {
 							data.push({});
-							data[count]["url"] = await e.findElement(By.css("h2>a")).getAttribute("href");
+							//data[count]["blog_id"] = global_urls[i]["blog_id"]
 							data[count]["title"] = await e.findElement(By.css("h2>a")).getText();
-							data[count++]["subtitle"] = await e.findElement(By.css("a.post_txt_wrap>div.post_txt")).getText();
+							data[count]["post_url"] = await e.findElement(By.css("h2>a")).getAttribute("href");
+							data[count]["subtitle"] = await e.findElement(By.css("a.post_txt_wrap>div.post_txt")).getText();
+							//data[count]["author"] = "";
+							//data[count++]["note_dtl"] = "";
 						}
 					}
 					finally{
-						console.log(data);
 						
 						driver.quit();
+						console.log(data);
 						//TODO : SELENIUM으로 조회된 OBJECT 배열을 DB에서 조회해온 내용과 비교하여, UPDATE OR INSERT
+						for(var j = 0; j < data.length; ++j) {
+							console.log(data[j]);
+							//await postMerge(data[j]);
+						}
+						
 					}
 				})();
 			} else if (blog_id == "1003") {
