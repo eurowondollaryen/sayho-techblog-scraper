@@ -1,5 +1,14 @@
 /*selenium을 활용하여 db에 insert한다.*/
+/*
+heroku setting for Selenium
+method 1. buildpack with command
+# heroku buildpacks:add --index 1 https://github.com/heroku/heroku-buildpack-chromedriver
+# heroku buildpacks:add --index 2 https://github.com/heroku/heroku-buildpack-google-chrome
 
+method 2. config in heroku dashboard
+Settings -> Add buildpacks -> https://github.com/heroku/heroku-buildpack-chromedriver -> Save changes
+Settings -> Add buildpacks -> https://github.com/heroku/heroku-buildpack-google-chrome -> Save changes
+*/
 //postgres
 const pool = require('./db.js').pool;
 
@@ -11,6 +20,13 @@ const cheerio = require("cheerio");
 
 //selenium
 const {Builder, By, Key, until} = require("selenium-webdriver");
+const chrome = require("selenium-webdriver/chrome");
+//Below arguments are critical for Heroku deployment
+let options = new chrome.Options();
+options.addArguments("--headless");
+options.addArguments("--disable-gpu");
+options.addArguments("--no-sandbox");
+
 
 var global_urls = [];
 //1. 블로그 정보를 모두 가져온다.
@@ -23,6 +39,12 @@ var initGlobal = async function() {
 
 //2. 각 회사의 포스트를 크롤링하여 DB에 insert한다.
 var scraping = async function() {
+		//build chrome driver
+		let driver = await new Builder()
+		.forBrowser('chrome')
+		.setChromeOptions(options)//option for heroku deployment.
+		.build();
+		
 		console.log("getting initial data...");
 		await initGlobal();//초기데이터 가져오는데 성공!
 		console.log(global_urls);
@@ -36,7 +58,6 @@ var scraping = async function() {
 				//2. naver
 				(async function example() {
 					var data = [];
-					let driver = await new Builder().forBrowser('chrome').build();
 					try {
 						// Navigate to Url
 						await driver.get(global_urls[1]["base_url"]);
