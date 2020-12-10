@@ -119,13 +119,15 @@ var scraping = async function() {
 						let count = 0;
 						
 						for(let e of elements) {
-							data.push({});
-							//data[count]["blog_id"] = global_urls[i]["blog_id"]
-							data[count]["title"] = await e.findElement(By.css("h2>a")).getText();
-							data[count]["post_url"] = await e.findElement(By.css("h2>a")).getAttribute("href");
-							data[count]["subtitle"] = await e.findElement(By.css("a.post_txt_wrap>div.post_txt")).getText();
-							//data[count]["author"] = "";
-							//data[count++]["note_dtl"] = "";
+							if(e != undefined && e != null) {
+								data.push({});
+								data[count]["blog_id"] = await global_urls[i]["blog_id"];
+								data[count]["title"] = await e.findElement(By.css("h2>a")).getText();
+								data[count]["post_url"] = await e.findElement(By.css("h2>a")).getAttribute("href");
+								data[count]["subtitle"] = await e.findElement(By.css("a.post_txt_wrap>div.post_txt")).getText();
+								data[count]["author"] = "";
+								data[count++]["note_dtl"] = "";
+							}
 						}
 					}
 					finally{
