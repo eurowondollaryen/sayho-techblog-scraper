@@ -26,7 +26,7 @@ const getBlogList = function(req, res) {
 };
 
 const printBlogList = async function(req, res) {
-	//TODO : solve promise problem
+	// TODO: solve promise problem
 	//reference : https://medium.com/@bluepnume/learn-about-promises-before-you-start-using-async-await-eb148164a9c8#.w234uo7h3
 	var list = await blog.getBlogList();
 	res.render("index", {
