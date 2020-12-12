@@ -70,42 +70,12 @@ const scraping = async function () {
 
     console.log("getting initial data...");
     await initGlobal();//초기데이터 가져오는데 성공!
-    console.log(global_urls);
+    console.log(global_urls[0]);
     console.log("batch start!! - " + new Date().toString());
 
     for (var i = 0; i < global_urls.length; ++i) {
         var blog_id = global_urls[i]["blog_id"];
         if (blog_id == "1001") {
-            //1.wooahan
-            /*
-            const getHtml = async () => {
-                try {
-                    return await axios.get(global_urls[0]["base_url"]);//global url array
-                } catch (error) {
-                    console.error(error);
-                }
-            };
-
-            getHtml().then(html => {
-                let ulList = [];
-                const $ = cheerio.load(html.data);//cheerio init
-                const $bodyList = $("div.list").children("div.list-module");
-
-                $bodyList.each(function(i, elem) {
-                    ulList[i] = {
-                        author: $(this).find("span.post-meta").text(),
-                        url: global_urls[0]["base_url"] + $(this).find("a").attr("href"),
-                        title: $(this).find("a").children("h2.post-link").text(),
-                        subtitle: $(this).find("a").children("p.post-description").text()
-                    };
-                });
-                console.log(ulList);
-                const data = ulList.filter(n => n.title);
-                return data;
-            }).then(data => {
-                res.json(data);
-            });
-            */
 
         } else if (blog_id == "1002") {
             //2. naver
@@ -123,12 +93,12 @@ const scraping = async function () {
                     for (let e of elements) {
                         if (e != undefined && e != null) {
                             data.push({});
-                            data[count]["blog_id"] = global_urls[i]["blog_id"];
+                            //data[count]["blog_id"] = global_urls[i]["blog_id"];
                             data[count]["title"] = await e.findElement(By.css("h2>a")).getText();
                             data[count]["post_url"] = await e.findElement(By.css("h2>a")).getAttribute("href");
                             data[count]["subtitle"] = await e.findElement(By.css("a.post_txt_wrap>div.post_txt")).getText();
-                            data[count]["author"] = "";
-                            data[count++]["note_dtl"] = "";
+                            //data[count]["author"] = "";
+                            //data[count++]["note_dtl"] = "";
                         }
                     }
                 } finally {
