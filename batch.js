@@ -31,28 +31,29 @@ options.addArguments("--no-sandbox");
 let global_urls = [];
 
 //selenium으로 조회된 object를 가지고 merge into 해주는 함수
+//TODO: 이 쿼리의 문제점 : TITLE이 바뀌면 새롭게 INSERT된다.
 const postMerge = async function (postObj) {
     const queryStr = "WITH UPSERT AS (UPDATE ICTPOSTS \n"
         + "SET UPDT_DT = TO_CHAR(NOW(),'YYYYMMDD') \n"
-        + "WHERE BLOG_ID = '" + postObj["blog_id"] + "' \n"
-        + "AND TITLE = '" + postObj["title"] + "' RETURNING *)\n"
+        + "WHERE BLOG_ID = $1 \n"
+        + "AND TITLE = $2 RETURNING *)\n"
         + "INSERT INTO ICTPOSTS(BLOG_ID, POST_SEQ, TITLE, POST_URL, SUBTITLE, AUTHOR, NOTE_DTL, INST_DT) \n"
-        + "SELECT '" + postObj["blog_id"] + "' \n"
-        + ",(SELECT COUNT(*) FROM ICTBLOGS WHERE BLOG_ID = '" + postObj["blog_id"] + "')+1\n"
-        + ",'" + postObj["title"] + "'\n"
-        + ",'" + postObj["post_url"] + "'\n"
-        + ",'" + postObj["subtitle"] + "'\n"
-        + ",'" + postObj["author"] + "'\n"
-        + ",'" + postObj["note_dtl"] + "'\n"
+        + "SELECT $1 \n"
+        + ",NEXTVAL('SQ_ICTPOSTS')\n"
+        + ",$2\n"
+        + ",$3\n"
+        + ",$4\n"
+        + ",$5\n"
+        + ",$6\n"
         + ",TO_CHAR(NOW(), 'YYYYMMDD') \n"
         + "WHERE NOT EXISTS(SELECT * FROM UPSERT)";
-    console.log(queryStr);
-    await pool.query(queryStr);
+    const param = [postObj["blog_id"], postObj["title"], postObj["post_url"], postObj["subtitle"], postObj["author"], postObj["note_dtl"]];
+    await pool.query(queryStr, param);
 };
 
 //1. 블로그 정보를 모두 가져온다.
 const initGlobal = async function () {
-    await pool.query("SELECT BLOG_ID, TITLE_KR, ROUTE, BASE_URL"
+    await pool.query("SELECT BLOG_ID, TITLE_KR, TITLE_EN, ROUTE, BASE_URL"
         + " FROM ICTBLOGS"
         + " ORDER BY BLOG_ID")
         .then(function (res) {
@@ -72,56 +73,51 @@ const scraping = async function () {
     await initGlobal();//초기데이터 가져오는데 성공!
     console.log("batch start!! - " + new Date().toString());
     var i = 0;
-    
-    //주의 : async, await을 사용하려면 forEach를 사용해야한다.
+
+    //주의 : async, await을 사용하려면 for loop가 아닌, forEach를 사용해야한다. 안그러면 안에서 global_urls의 값이 undefined로 나옴.
+    //reference : https://velog.io/@ksh4820/asyncawait%EB%A5%BC-%EC%9D%B4%EC%9A%A9%ED%95%B4-loop-%EB%8B%A4%EB%A3%A8%EA%B8%B0
     global_urls.forEach((item) => {
         var blog_id = item["blog_id"];
         if (blog_id == "1001") {
 
         } else if (blog_id == "1002") {
-            //2. naver
-            (async function example() {
-                var data = [];
-                try {
-                    // Navigate to Url
-                    await driver.get(item["base_url"]);
-                    //wait till loaded
-                    await driver.wait(until.elementLocated(By.css('div.contents>div.post_article>div.cont_post')), 10000);
+            try{
+                //2. naver
+                (async function example() {
+                    var data = [];
+                    try {
+                        // Navigate to Url
+                        await driver.get(item["base_url"]);
+                        //wait till loaded
+                        await driver.wait(until.elementLocated(By.css('div.contents>div.post_article>div.cont_post')), 10000);
 
-                    let elements = await driver.findElements(By.css('div.contents>div.post_article>div.cont_post'));
-                    let count = 0;
+                        let elements = await driver.findElements(By.css('div.contents>div.post_article>div.cont_post'));
+                        let count = 0;
 
-                    for (let e of elements) {
-                        if (e != undefined && e != null) {
-                            //console.log(item);//undefined로 나옴
-                            await data.push({
-                                blog_id: item["blog_id"],
-                                title: await e.findElement(By.css("h2>a")).getText(),
-                                post_url: await e.findElement(By.css("h2>a")).getAttribute("href"),
-                                subtitle: await e.findElement(By.css("a.post_txt_wrap>div.post_txt")).getText(),
-                                author: "",
-                                note_dtl: ""
-                            });
-                            /*
-                            data[count]["blog_id"] = global_urls[i]["blog_id"];
-                            data[count]["title"] = await e.findElement(By.css("h2>a")).getText();
-                            data[count]["post_url"] = await e.findElement(By.css("h2>a")).getAttribute("href");
-                            data[count]["subtitle"] = await e.findElement(By.css("a.post_txt_wrap>div.post_txt")).getText();
-                            data[count]["author"] = "";
-                            data[count++]["note_dtl"] = "";*/
+                        for (let e of elements) {
+                            if (e != undefined && e != null) {
+                                data.push({
+                                    blog_id: item["blog_id"],
+                                    title: await e.findElement(By.css("h2>a")).getText(),
+                                    post_url: await e.findElement(By.css("h2>a")).getAttribute("href"),
+                                    subtitle: await e.findElement(By.css("a.post_txt_wrap>div.post_txt")).getText(),
+                                    author: "",
+                                    note_dtl: ""
+                                });
+                            }
                         }
+                    } finally {
+                        driver.quit();
+                        //merge into
+                        data.forEach(async function (post) {
+                            await postMerge(post);
+                        });
+                        console.log(item["blog_id"] + " - " + item["title_en"] + " insert completed!");
                     }
-                } finally {
-
-                    driver.quit();
-                    //TODO : SELENIUM으로 조회된 OBJECT 배열을 DB에서 조회해온 내용과 비교하여, UPDATE OR INSERT
-                    for (var j = 0; j < data.length; ++j) {
-                        console.log(data[j]);
-                        //await postMerge(data[j]);
-                    }
-
-                }
-            })();
+                })();
+            } catch(e) {
+                console.log(e.toString());
+            }
         } else if (blog_id == "1003") {
         } else if (blog_id == "1004") {
         } else if (blog_id == "1005") {
