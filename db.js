@@ -5,6 +5,16 @@ postgresql metadata table 리스트
 https://www.postgresql.org/docs/9.1/catalogs.html
 */
 const { Pool } = require('pg');
+
+//for heroku
+const pool = new Pool({
+	connectionString: process.env.DATABASE_URL,
+	ssl: {
+		rejectUnauthorized: false
+	}
+});
+//for local
+/*
 const pool = new Pool({
 	user : "postgres",
 	host : "127.0.0.1",
@@ -12,7 +22,7 @@ const pool = new Pool({
 	password : "root##3804",
 	port : "5432"
 });
-
+*/
 exports.connect = function(){
 	//pool error check
 	pool.on("error", (err, client) => {
