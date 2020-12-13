@@ -70,11 +70,12 @@ const scraping = async function () {
 
     console.log("getting initial data...");
     await initGlobal();//초기데이터 가져오는데 성공!
-    console.log(global_urls[0]);
     console.log("batch start!! - " + new Date().toString());
-
-    for (var i = 0; i < global_urls.length; ++i) {
-        var blog_id = global_urls[i]["blog_id"];
+    var i = 0;
+    
+    //주의 : async, await을 사용하려면 forEach를 사용해야한다.
+    global_urls.forEach((item) => {
+        var blog_id = item["blog_id"];
         if (blog_id == "1001") {
 
         } else if (blog_id == "1002") {
@@ -83,7 +84,7 @@ const scraping = async function () {
                 var data = [];
                 try {
                     // Navigate to Url
-                    await driver.get(global_urls[1]["base_url"]);
+                    await driver.get(item["base_url"]);
                     //wait till loaded
                     await driver.wait(until.elementLocated(By.css('div.contents>div.post_article>div.cont_post')), 10000);
 
@@ -92,19 +93,27 @@ const scraping = async function () {
 
                     for (let e of elements) {
                         if (e != undefined && e != null) {
-                            data.push({});
-                            //data[count]["blog_id"] = global_urls[i]["blog_id"];
+                            //console.log(item);//undefined로 나옴
+                            await data.push({
+                                blog_id: item["blog_id"],
+                                title: await e.findElement(By.css("h2>a")).getText(),
+                                post_url: await e.findElement(By.css("h2>a")).getAttribute("href"),
+                                subtitle: await e.findElement(By.css("a.post_txt_wrap>div.post_txt")).getText(),
+                                author: "",
+                                note_dtl: ""
+                            });
+                            /*
+                            data[count]["blog_id"] = global_urls[i]["blog_id"];
                             data[count]["title"] = await e.findElement(By.css("h2>a")).getText();
                             data[count]["post_url"] = await e.findElement(By.css("h2>a")).getAttribute("href");
                             data[count]["subtitle"] = await e.findElement(By.css("a.post_txt_wrap>div.post_txt")).getText();
-                            //data[count]["author"] = "";
-                            //data[count++]["note_dtl"] = "";
+                            data[count]["author"] = "";
+                            data[count++]["note_dtl"] = "";*/
                         }
                     }
                 } finally {
 
                     driver.quit();
-                    console.log(data);
                     //TODO : SELENIUM으로 조회된 OBJECT 배열을 DB에서 조회해온 내용과 비교하여, UPDATE OR INSERT
                     for (var j = 0; j < data.length; ++j) {
                         console.log(data[j]);
@@ -125,8 +134,7 @@ const scraping = async function () {
         } else {
             console.log("[Error] batch logic Not written!");
         }
-    }
-
+    });
 };
 
 
