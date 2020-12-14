@@ -83,7 +83,7 @@ const scraping = async function () {
         } else if (blog_id == "1002") {
             try{
                 //2. naver
-                (async function example() {
+                (async () => {
                     var data = [];
                     try {
                         // Navigate to Url
@@ -118,7 +118,48 @@ const scraping = async function () {
             } catch(e) {
                 console.log(e.toString());
             }
-        } else if (blog_id == "1003") {
+        } else if (blog_id == "1003") {//coupang
+            //coupang
+            /*
+            TODO
+            problem 1. UnhandledPromiseRejectionWarning on selenium
+            problem 2. medium not scrapped well..
+            */
+            (async () => {
+                var data = [];
+                driver = await new Builder()
+                .forBrowser('chrome')
+                .setChromeOptions(options)//option for heroku deployment.
+                .build();
+                try {
+                    // Navigate to Url
+                    await driver.get(item["base_url"]);
+                    //wait till loaded
+                    await driver.wait(until.elementLocated(By.css('section.u-marginTop30>div.row>div.col>div.col')), 10000);
+                    
+                    let elements = await driver.findElements(By.css('section.u-marginTop30>div.row>div.col>div.col'));
+                    let count = 0;
+                    
+                    for(let e of elements) {
+                        data.push({
+                            blog_id: item["blog_id"],
+                            title: await e.findElement(By.css("a>h3>div")).getText(),
+                            post_url: await e.findElement(By.css("a")).getAttribute("href"),
+                            subtitle: await e.findElement(By.css("div>div")).getText(),
+                            author: "",
+                            note_dtl: ""
+                        });
+                    }
+                }
+                finally{
+                    driver.quit();
+                    //merge into
+                    data.forEach(async function (post) {
+                        await postMerge(post);
+                    });
+                    console.log(item["blog_id"] + " - " + item["title_en"] + " insert completed!");
+                }
+            })();
         } else if (blog_id == "1004") {
         } else if (blog_id == "1005") {
         } else if (blog_id == "1006") {
