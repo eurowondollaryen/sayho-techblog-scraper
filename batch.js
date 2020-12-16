@@ -75,7 +75,7 @@ const scraping = async function () {
     var i = 0;
 
     //주의 : async, await을 사용하려면 for loop가 아닌, forEach를 사용해야한다. 안그러면 안에서 global_urls의 값이 undefined로 나옴.
-    //reference : https://velog.io/@ksh4820/asyncawait%EB%A5%BC-%EC%9D%B4%EC%9A%A9%ED%95%B4-loop-%EB%8B%A4%EB%A3%A8%EA%B8%B0
+    //reference :  https://velog.io/@ksh4820/asyncawait%EB%A5%BC-%EC%9D%B4%EC%9A%A9%ED%95%B4-loop-%EB%8B%A4%EB%A3%A8%EA%B8%B0
     global_urls.forEach(async (item) => {
         var blog_id = item["blog_id"];
         if (blog_id == "1001") {
