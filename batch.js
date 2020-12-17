@@ -162,7 +162,35 @@ const scraping = async function () {
                     console.log(item["blog_id"] + " - " + item["title_en"] + " insert completed!");
                 }
             })();
-        } else if (blog_id == "1004") {
+        } else if (blog_id == "1004") {//spoqa, axios
+            const getHtml = async () => {
+                try {
+                    console.log("connecting to " + item["base_url"] + "...");
+                    return await axios.get(item["base_url"]);//global url array
+                } catch (error) {
+                    console.error(error);
+                }
+            };
+        
+            getHtml().then(html => {
+                let ulList = [];
+                const $ = cheerio.load(html.data);//cheerio init
+                const $bodyList = $("ul.posts").children("li.post-item").children("div.post-author-info");
+                
+                $bodyList.each(function(i, elem) {
+                    ulList[i] = {
+                        url: item["base_url"] + $(this).find("h2.post-title").find("a").attr("href"),
+                        title: $(this).find("h2.post-title").find("a").find("span.post-title-words").text(),
+                        subtitle: $(this).find("p.post-description").text()
+                    };
+                });
+                console.log(ulList);
+                const data = ulList.filter(n => n.title);
+                return data;
+            }).then(data => {
+                //todo : data로 같은로직으로 넣기
+            });
+
         } else if (blog_id == "1005") {
         } else if (blog_id == "1006") {
         } else if (blog_id == "1007") {
