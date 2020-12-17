@@ -179,16 +179,22 @@ const scraping = async function () {
                 
                 $bodyList.each(function(i, elem) {
                     ulList[i] = {
-                        url: item["base_url"] + $(this).find("h2.post-title").find("a").attr("href"),
+                        blog_id: item["blog_id"],
                         title: $(this).find("h2.post-title").find("a").find("span.post-title-words").text(),
-                        subtitle: $(this).find("p.post-description").text()
+                        post_url: item["base_url"] + $(this).find("h2.post-title").find("a").attr("href"),
+                        subtitle: $(this).find("p.post-description").text(),
+                        author: "",
+                        note_dtl: ""
                     };
                 });
-                console.log(ulList);
                 const data = ulList.filter(n => n.title);
                 return data;
             }).then(data => {
-                //todo : data로 같은로직으로 넣기
+                //merge
+                data.forEach(async function (post) {
+                    await postMerge(post);
+                });
+                console.log(item["blog_id"] + " - " + item["title_en"] + " insert completed!");
             });
 
         } else if (blog_id == "1005") {
