@@ -79,7 +79,7 @@ const scraping = async function () {
     global_urls.forEach(async (item) => {
         var blog_id = item["blog_id"];
         if (blog_id == "1001") {
-
+            
         } else if (blog_id == "1002") {
             try{
                 //2. naver
@@ -126,6 +126,7 @@ const scraping = async function () {
             problem 1. UnhandledPromiseRejectionWarning on selenium
             problem 2. medium not scrapped well..
             */
+           /*
             (async () => {
                 var data = [];
                 driver = await new Builder()
@@ -162,6 +163,7 @@ const scraping = async function () {
                     console.log(item["blog_id"] + " - " + item["title_en"] + " insert completed!");
                 }
             })();
+            */
         } else if (blog_id == "1004") {//spoqa, axios
             const getHtml = async () => {
                 try {
