@@ -199,7 +199,40 @@ const scraping = async function () {
                 console.log(item["blog_id"] + " - " + item["title_en"] + " insert completed!");
             });
 
-        } else if (blog_id == "1005") {
+        } else if (blog_id == "1005") {//line, axios
+            const getHtml = async () => {
+                try {
+                    console.log("connecting to " + item["base_url"] + "...");
+                    return await axios.get(item["base_url"]);//global url array
+                } catch (error) {
+                    console.error(error);
+                }
+            };
+        
+            getHtml().then(html => {
+                let ulList = [];
+                const $ = cheerio.load(html.data);//cheerio init
+                const $bodyList = $("div.ast-row").children("article.post").children("div.ast-post-format-").children("div.post-content");
+                
+                $bodyList.each(function(i, elem) {
+                    ulList[i] = {
+                        blog_id: item["blog_id"],
+                        title: $(this).find("header.entry-header").find("h2.entry-title").find("a").text(),
+                        post_url: $(this).find("header.entry-header").find("h2.entry-title").find("a").attr("href"),
+                        subtitle: ""/*$(this).find("div.entry-content").find("div.entry-summary").find("p").text()*/,
+                        author: $(this).find("header.entry-header").find("h2.entry-meta").find("span.author").find("a").find("span").text(),
+                        note_dtl: ""
+                    };
+                });
+                const data = ulList.filter(n => n.title);
+                return data;
+            }).then(data => {
+                //merge
+                data.forEach(async function (post) {
+                    await postMerge(post);
+                });
+                console.log(item["blog_id"] + " - " + item["title_en"] + " insert completed!");
+            });
         } else if (blog_id == "1006") {
         } else if (blog_id == "1007") {
         } else if (blog_id == "1008") {
