@@ -1,3 +1,40 @@
+//wooahan web scrapping
+app.get("/get/wooahan", function(req, res) {
+    const getHtml = async () => {
+        try {
+            return await axios.get(global_urls[0]["base_url"]);//global url array
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    getHtml().then(html => {
+        let ulList = [];
+        const $ = cheerio.load(html.data);//cheerio init
+        const $bodyList = $("div.list").children("div.list-module");
+
+        $bodyList.each(function(i, elem) {
+            ulList[i] = {
+                author: $(this).find("span.post-meta").text(),
+                url: global_urls[0]["base_url"] + $(this).find("a").attr("href"),
+                title: $(this).find("a").children("h2.post-link").text(),
+                subtitle: $(this).find("a").children("p.post-description").text()
+            };
+        });
+        console.log(ulList);
+        const data = ulList.filter(n => n.title);
+        return data;
+    }).then(data => {
+		res.json(data);
+		/*
+        res.render("wooahan", {
+            title: "우아한형제들",
+            list: data
+        });
+		*/
+    });
+});
+
 //naver
 app.get("/get/naver", function(req, res) {
 	//selenium
@@ -31,4 +68,76 @@ app.get("/get/naver", function(req, res) {
 			*/
 		}
 	})();
+});
+
+app.get("/get/spoqa", function(req, res) {
+    const getHtml = async () => {
+        try {
+        	console.log("connecting to " + global_urls[3]["base_url"] + "...");
+            return await axios.get(global_urls[3]["base_url"]);//global url array
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    getHtml().then(html => {
+        let ulList = [];
+        const $ = cheerio.load(html.data);//cheerio init
+        const $bodyList = $("ul.posts").children("li.post-item").children("div.post-author-info");
+        
+        $bodyList.each(function(i, elem) {
+            ulList[i] = {
+                url: global_urls[3]["base_url"] + $(this).find("h2.post-title").find("a").attr("href"),
+                title: $(this).find("h2.post-title").find("a").find("span.post-title-words").text(),
+                subtitle: $(this).find("p.post-description").text()
+            };
+        });
+        console.log(ulList);
+        const data = ulList.filter(n => n.title);
+        return data;
+    }).then(data => {
+		res.json(data);
+		/*
+        res.render("spoqa", {
+            title: "스포카",
+            list: data
+        });
+		*/
+    });
+});
+
+app.get("/get/line", function(req, res) {
+    const getHtml = async () => {
+        try {
+            console.log("connecting to " + global_urls[4]["base_url"] + "...");
+            return await axios.get(global_urls[4]["base_url"]);//global url array
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    getHtml().then(html => {
+        let ulList = [];
+        const $ = cheerio.load(html.data);//cheerio init
+        const $bodyList = $("div#post-list").children("article.post").children("div.article-inner");
+        
+        $bodyList.each(function(i, elem) {
+            ulList[i] = {
+                url: $(this).find("header.entry-header").find("div.entry-header-text-top").find("h2.entry-title").find("a").attr("href"),
+                title: $(this).find("header.entry-header").find("div.entry-header-text-top").find("h2.entry-title").find("a").text(),
+                subtitle: $(this).find("header.entry-content").find("div.entry-summary").find("p").text()
+            };
+        });
+        console.log(ulList);
+        const data = ulList.filter(n => n.title);
+        return data;
+    }).then(data => {
+		res.json(data);
+		/*
+        res.render("line", {
+            title: "라인",
+            list: data
+        });
+		*/
+    });
 });

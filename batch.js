@@ -63,12 +63,13 @@ const initGlobal = async function () {
 
 //2. 각 회사의 포스트를 크롤링하여 DB에 insert한다.
 const scraping = async function () {
+    /*
     //build chrome driver
     let driver = await new Builder()
         .forBrowser('chrome')
         .setChromeOptions(options)//option for heroku deployment.
         .build();
-
+    */
     console.log("getting initial data...");
     await initGlobal();//초기데이터 가져오는데 성공!
     console.log("batch start!! - " + new Date().toString());
@@ -78,14 +79,50 @@ const scraping = async function () {
     //reference :  https://velog.io/@ksh4820/asyncawait%EB%A5%BC-%EC%9D%B4%EC%9A%A9%ED%95%B4-loop-%EB%8B%A4%EB%A3%A8%EA%B8%B0
     global_urls.forEach(async (item) => {
         var blog_id = item["blog_id"];
+
         if (blog_id == "1001") {
-            
+            const getHtml = async () => {
+                try {
+                    return await axios.get(item["base_url"]);//global url array
+                } catch (error) {
+                    console.error(error);
+                }
+            };
+        
+            getHtml().then(html => {
+                let ulList = [];
+                const $ = cheerio.load(html.data);//cheerio init
+                const $bodyList = $("div.list").children("div.list-module");
+        
+                $bodyList.each(function(i, elem) {
+                    ulList[i] = {
+                        blog_id: item["blog_id"],
+                        title: $(this).find("a").children("h2.post-link").text(),
+                        post_url: item["base_url"] + $(this).find("a").attr("href"),
+                        subtitle: $(this).find("a").children("p.post-description").text(),
+                        author: $(this).find("span.post-meta").text(),
+                        note_dtl: ""
+                    };
+                });
+                const data = ulList.filter(n => n.title);
+                return data;
+            }).then(data => {
+                //merge
+                data.forEach(async function (post) {
+                    await postMerge(post);
+                });
+                console.log(item["blog_id"] + " - " + item["title_en"] + " insert completed!");
+            });
         } else if (blog_id == "1002") {
             try{
                 //2. naver
                 (async () => {
                     var data = [];
                     try {
+                        let driver = await new Builder()
+                        .forBrowser('chrome')
+                        .setChromeOptions(options)//option for heroku deployment.
+                        .build();
                         // Navigate to Url
                         await driver.get(item["base_url"]);
                         //wait till loaded
@@ -126,7 +163,6 @@ const scraping = async function () {
             problem 1. UnhandledPromiseRejectionWarning on selenium
             problem 2. medium not scrapped well..
             */
-           /*
             (async () => {
                 var data = [];
                 driver = await new Builder()
@@ -134,6 +170,10 @@ const scraping = async function () {
                 .setChromeOptions(options)//option for heroku deployment.
                 .build();
                 try {
+                    let driver = await new Builder()
+                        .forBrowser('chrome')
+                        .setChromeOptions(options)//option for heroku deployment.
+                        .build();
                     // Navigate to Url
                     await driver.get(item["base_url"]);
                     //wait till loaded
@@ -163,7 +203,6 @@ const scraping = async function () {
                     console.log(item["blog_id"] + " - " + item["title_en"] + " insert completed!");
                 }
             })();
-            */
         } else if (blog_id == "1004") {//spoqa, axios
             const getHtml = async () => {
                 try {
