@@ -193,44 +193,6 @@ app.get("/batchtest", function(req, res) {
 });
 
 /* SCRAPING LOGIC */
-app.get("/get/google", function(req, res) {
-    const getHtml = async () => {
-        try {
-            console.log("connecting to " + global_urls[5]["base_url"] + "...");
-            return await axios.get(global_urls[5]["base_url"]);//global url array
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
-    getHtml().then(html => {
-        let ulList = [];
-        const $ = cheerio.load(html.data);//cheerio init
-        const $bodyList = $("div.Blog").children("div.post");
-        
-        $bodyList.each(function(i, elem) {
-            ulList[i] = {
-                url: $(this).find("h2.title").find("a").attr("href"),
-                title: $(this).find("h2.title").find("a").text(),
-                date: $(this).find("div.post-header").find("div.published").find("span.publishdate").text()
-            };
-        });
-        console.log(ulList);
-        const data = ulList.filter(n => n.title);
-        return data;
-    }).then(data => {
-		res.json(data);
-		/*
-        res.render("google", {
-            title: "구글",
-            list: data
-        });
-		*/
-    });
-});
-
-
-
 //banksalad
 app.get("/get/banksalad", function(req, res) {
 	//selenium

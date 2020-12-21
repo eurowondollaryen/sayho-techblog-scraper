@@ -271,8 +271,40 @@ const scraping = async function () {
                 });
                 console.log(item["blog_id"] + " - " + item["title_en"] + " insert completed!");
             });
-        } else if (blog_id == "1006") {
-
+        } else if (blog_id == "1006") {//google, axios
+            const getHtml = async () => {
+                try {
+                    console.log("connecting to " + item["base_url"] + "...");
+                    return await axios.get(item["base_url"]);//global url array
+                } catch (error) {
+                    console.error(error);
+                }
+            };
+        
+            getHtml().then(html => {
+                let ulList = [];
+                const $ = cheerio.load(html.data);//cheerio init
+                const $bodyList = $("div.Blog").children("div.post");
+                
+                $bodyList.each(function(i, elem) {
+                    ulList[i] = {
+                        blog_id: item["blog_id"],
+                        title: $(this).find("h2.title").find("a").text(),
+                        post_url: $(this).find("h2.title").find("a").attr("href"),
+                        subtitle: "",
+                        author: "",
+                        note_dtl: $(this).find("div.post-header").find("div.published").find("span.publishdate").text()
+                    };
+                });
+                const data = ulList.filter(n => n.title);
+                return data;
+            }).then(data => {
+                //merge
+                data.forEach(async function (post) {
+                    await postMerge(post);
+                });
+                console.log(item["blog_id"] + " - " + item["title_en"] + " insert completed!");
+            });
         } else if (blog_id == "1007") {//nhn, selenium
             (async () => {
                 var data = [];
@@ -321,7 +353,6 @@ const scraping = async function () {
         }
     });
 };
-
 
 //export scraping function
 exports.scraping = scraping;
