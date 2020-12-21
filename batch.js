@@ -118,11 +118,11 @@ const scraping = async function () {
                 //2. naver
                 (async () => {
                     var data = [];
-                    try {
-                        let driver = await new Builder()
+                    let driver = await new Builder()
                         .forBrowser('chrome')
                         .setChromeOptions(options)//option for heroku deployment.
                         .build();
+                    try {
                         // Navigate to Url
                         await driver.get(item["base_url"]);
                         //wait till loaded
@@ -143,7 +143,12 @@ const scraping = async function () {
                                 });
                             }
                         }
-                    } finally {
+                    }
+                    catch (error) {
+                        console.log("error occured in " + item["blog_id"]);
+                        console.error(error);
+                    }
+                    finally {
                         driver.close();
                         driver.quit();
                         //merge into
@@ -156,24 +161,14 @@ const scraping = async function () {
             } catch(e) {
                 console.log(e.toString());
             }
-        } else if (blog_id == "1003") {//coupang
-            //coupang
-            /*
-            TODO
-            problem 1. UnhandledPromiseRejectionWarning on selenium
-            problem 2. medium not scrapped well..
-            */
+        } else if (blog_id == "1003") {//coupang, selenium
             (async () => {
                 var data = [];
-                driver = await new Builder()
-                .forBrowser('chrome')
-                .setChromeOptions(options)//option for heroku deployment.
-                .build();
-                try {
-                    let driver = await new Builder()
+                let driver = await new Builder()
                         .forBrowser('chrome')
                         .setChromeOptions(options)//option for heroku deployment.
                         .build();
+                try {
                     // Navigate to Url
                     await driver.get(item["base_url"]);
                     //wait till loaded
@@ -192,6 +187,10 @@ const scraping = async function () {
                             note_dtl: ""
                         });
                     }
+                }
+                catch (error) {
+                    console.log("error occured in " + item["blog_id"]);
+                    console.error(error);
                 }
                 finally{
                     driver.close();
@@ -273,7 +272,46 @@ const scraping = async function () {
                 console.log(item["blog_id"] + " - " + item["title_en"] + " insert completed!");
             });
         } else if (blog_id == "1006") {
-        } else if (blog_id == "1007") {
+
+        } else if (blog_id == "1007") {//nhn, selenium
+            (async () => {
+                var data = [];
+                let driver = await new Builder()
+                    .forBrowser('chrome')
+                    .setChromeOptions(options)//option for heroku deployment.
+                    .build();
+                try {
+                    // Navigate to Url
+                    await driver.get(item["base_url"]);
+                    //wait till loaded
+                    await driver.wait(until.elementLocated(By.css('ul.lst_type>li.lst_item>a')), 10000);
+                    
+                    let elements = await driver.findElements(By.css('ul.lst_type>li.lst_item>a'));
+                    let count = 0;
+                    for(let e of elements) {
+                        data.push({
+                            blog_id: item["blog_id"],
+                            title: await e.findElement(By.css("div.sec_box>h3")).getText(),
+                            post_url: await e.getAttribute("href"),
+                            subtitle: await e.findElement(By.css("div.sec_box>p")).getText(),
+                            author: "",
+                            note_dtl: ""
+                        });
+                    }
+                }
+                catch (error) {
+                    console.log("error occured in " + item["blog_id"]);
+                    console.error(error);
+                }
+                finally{
+                    driver.close();
+                    driver.quit();
+                    data.forEach(async function (post) {
+                        await postMerge(post);
+                    });
+                    console.log(item["blog_id"] + " - " + item["title_en"] + " insert completed!");
+                }
+            })();
         } else if (blog_id == "1008") {
         } else if (blog_id == "1009") {
         } else if (blog_id == "1010") {

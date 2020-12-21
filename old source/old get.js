@@ -141,3 +141,36 @@ app.get("/get/line", function(req, res) {
 		*/
     });
 });
+
+app.get("/get/nhn", function(req, res) {
+	//selenium
+	(async function example() {
+		var data = [];
+		let driver = await new Builder().forBrowser('chrome').build();
+		try {
+			// Navigate to Url
+			await driver.get(global_urls[6]["base_url"]);
+			//wait till loaded
+			await driver.wait(until.elementLocated(By.css('ul.lst_type>li.lst_item>a')), 10000);
+			
+			let elements = await driver.findElements(By.css('ul.lst_type>li.lst_item>a'));
+			let count = 0;
+			for(let e of elements) {
+				data.push({});
+				data[count]["url"] = await e.getAttribute("href");
+				data[count]["title"] = await e.findElement(By.css("div.sec_box>h3")).getText();
+				data[count++]["subtitle"] = await e.findElement(By.css("div.sec_box>p")).getText();
+			}
+		}
+		finally{
+			driver.quit();
+			res.json(data);
+			/*
+			res.render("nhn", {
+				title: "NHN",
+				list: data
+			});
+			*/
+		}
+	})();
+});
