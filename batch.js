@@ -113,62 +113,60 @@ const scraping = async function () {
                 });
                 console.log(item["blog_id"] + " - " + item["title_en"] + " insert completed!");
             });
-        } else if (blog_id == "1002") {
+        } else if (blog_id == "1002") {//naver, selenium
             try{
                 //2. naver
-                (async () => {
-                    var data = [];
+                var data = [];
+                try {
                     let driver = await new Builder()
                         .forBrowser('chrome')
                         .setChromeOptions(options)//option for heroku deployment.
                         .build();
-                    try {
-                        // Navigate to Url
-                        await driver.get(item["base_url"]);
-                        //wait till loaded
-                        await driver.wait(until.elementLocated(By.css('div.contents>div.post_article>div.cont_post')), 10000);
+                    // Navigate to Url
+                    await driver.get(item["base_url"]);
+                    //wait till loaded
+                    await driver.wait(until.elementLocated(By.css('div.contents>div.post_article>div.cont_post')), 10000);
 
-                        let elements = await driver.findElements(By.css('div.contents>div.post_article>div.cont_post'));
-                        let count = 0;
+                    let elements = await driver.findElements(By.css('div.contents>div.post_article>div.cont_post'));
+                    let count = 0;
 
-                        for (let e of elements) {
-                            if (e != undefined && e != null) {
-                                data.push({
-                                    blog_id: item["blog_id"],
-                                    title: await e.findElement(By.css("h2>a")).getText(),
-                                    post_url: await e.findElement(By.css("h2>a")).getAttribute("href"),
-                                    subtitle: await e.findElement(By.css("a.post_txt_wrap>div.post_txt")).getText(),
-                                    author: "",
-                                    note_dtl: ""
-                                });
-                            }
+                    for (let e of elements) {
+                        if (e != undefined && e != null) {
+                            data.push({
+                                blog_id: item["blog_id"],
+                                title: await e.findElement(By.css("h2>a")).getText(),
+                                post_url: await e.findElement(By.css("h2>a")).getAttribute("href"),
+                                subtitle: await e.findElement(By.css("a.post_txt_wrap>div.post_txt")).getText(),
+                                author: "",
+                                note_dtl: ""
+                            });
                         }
                     }
-                    catch (error) {
-                        console.log("error occured in " + item["blog_id"]);
-                        console.error(error);
-                    }
-                    finally {
-                        driver.close();
-                        driver.quit();
-                        //merge into
-                        data.forEach(async function (post) {
-                            await postMerge(post);
-                        });
-                        console.log(item["blog_id"] + " - " + item["title_en"] + " insert completed!");
-                    }
-                })();
+                }
+                catch (error) {
+                    console.log("error occured in " + item["blog_id"]);
+                    console.error(error);
+                }
+                finally {
+                    driver.close();
+                    driver.quit();
+                    //merge into
+                    data.forEach(async function (post) {
+                        await postMerge(post);
+                    });
+                    console.log(item["blog_id"] + " - " + item["title_en"] + " insert completed!");
+                }
             } catch(e) {
                 console.log(e.toString());
             }
         } else if (blog_id == "1003") {//coupang, selenium
             (async () => {
                 var data = [];
-                let driver = await new Builder()
+                try {
+                    let driver = await new Builder()
                         .forBrowser('chrome')
                         .setChromeOptions(options)//option for heroku deployment.
                         .build();
-                try {
                     // Navigate to Url
                     await driver.get(item["base_url"]);
                     //wait till loaded
@@ -308,11 +306,11 @@ const scraping = async function () {
         } else if (blog_id == "1007") {//nhn, selenium
             (async () => {
                 var data = [];
-                let driver = await new Builder()
-                    .forBrowser('chrome')
-                    .setChromeOptions(options)//option for heroku deployment.
-                    .build();
                 try {
+                    let driver = await new Builder()
+                        .forBrowser('chrome')
+                        .setChromeOptions(options)//option for heroku deployment.
+                        .build();
                     // Navigate to Url
                     await driver.get(item["base_url"]);
                     //wait till loaded
@@ -344,7 +342,41 @@ const scraping = async function () {
                     console.log(item["blog_id"] + " - " + item["title_en"] + " insert completed!");
                 }
             })();
-        } else if (blog_id == "1008") {
+        } else if (blog_id == "1008") {//banksalad, selenium
+            (async function example() {
+                var data = [];
+                try {
+                    let driver = await new Builder()
+                        .forBrowser('chrome')
+                        .setChromeOptions(options)//option for heroku deployment.
+                        .build();
+                    // Navigate to Url
+                    await driver.get(item["base_url"]);
+                    //wait till loaded
+                    await driver.wait(until.elementLocated(By.css('div.style__BlogPostsWrapper-sc-5a1k8p-0>div.post_card>div.post_details>div.post_content')), 10000);
+                    
+                    let elements = await driver.findElements(By.css('div.style__BlogPostsWrapper-sc-5a1k8p-0>div.post_card>div.post_details>div.post_content'));
+                    let count = 0;
+                    for(let e of elements) {
+                        data.push({
+                            blog_id: item["blog_id"],
+                            title: await e.findElement(By.css("h2>a")).getText(),
+                            post_url: await e.findElement(By.css("h2>a")).getAttribute("href"),
+                            subtitle: await e.findElement(By.css("p")).getText(),
+                            author: "",
+                            note_dtl: ""
+                        });
+                    }
+                }
+                finally{
+                    driver.close();
+                    driver.quit();
+                    data.forEach(async function (post) {
+                        await postMerge(post);
+                    });
+                    console.log(item["blog_id"] + " - " + item["title_en"] + " insert completed!");
+                }
+            })();
         } else if (blog_id == "1009") {
         } else if (blog_id == "1010") {
         } else if (blog_id == "1011") {

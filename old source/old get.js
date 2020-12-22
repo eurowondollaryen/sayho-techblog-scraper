@@ -174,3 +174,37 @@ app.get("/get/nhn", function(req, res) {
 		}
 	})();
 });
+
+//banksalad
+app.get("/get/banksalad", function(req, res) {
+	//selenium
+	(async function example() {
+		var data = [];
+		let driver = await new Builder().forBrowser('chrome').build();
+		try {
+			// Navigate to Url
+			await driver.get(global_urls[7]["base_url"]);
+			//wait till loaded
+			await driver.wait(until.elementLocated(By.css('div.style__BlogPostsWrapper-sc-5a1k8p-0>div.post_card>div.post_details>div.post_content')), 10000);
+			
+			let elements = await driver.findElements(By.css('div.style__BlogPostsWrapper-sc-5a1k8p-0>div.post_card>div.post_details>div.post_content'));
+			let count = 0;
+			for(let e of elements) {
+				data.push({});
+				data[count]["url"] = await e.findElement(By.css("h2>a")).getAttribute("href");
+				data[count]["title"] = await e.findElement(By.css("h2>a")).getText();
+				data[count++]["subtitle"] = await e.findElement(By.css("p")).getText();
+			}
+		}
+		finally{
+			driver.quit();
+			res.json(data);
+			/*
+			res.render("banksalad", {
+				title: "Banksalad",
+				list: data
+			});
+			*/
+		}
+	})();
+});
