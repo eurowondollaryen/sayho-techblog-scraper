@@ -377,9 +377,9 @@ const scraping = async function () {
                     console.log(item["blog_id"] + " - " + item["title_en"] + " insert completed!");
                 }
             })();
-        } else if (blog_id == "1009") {
-        } else if (blog_id == "1010") {
-        } else if (blog_id == "1011") {
+        } else if (blog_id == "1009") {//lezhin, selenium
+        } else if (blog_id == "1010") {//kakao, selenium
+        } else if (blog_id == "1011") {//vcnc, selenium
         } else {
             console.log("[Error] batch logic Not written!");
         }
