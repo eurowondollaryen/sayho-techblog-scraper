@@ -114,59 +114,55 @@ const scraping = async function () {
                 console.log(item["blog_id"] + " - " + item["title_en"] + " insert completed!");
             });
         } else if (blog_id == "1002") {//naver, selenium
-            try{
-                //2. naver
-                var data = [];
-                try {
-                    let driver = await new Builder()
+            let driver = await new Builder()
                         .forBrowser('chrome')
                         .setChromeOptions(options)//option for heroku deployment.
                         .build();
-                    // Navigate to Url
-                    await driver.get(item["base_url"]);
-                    //wait till loaded
-                    await driver.wait(until.elementLocated(By.css('div.contents>div.post_article>div.cont_post')), 10000);
+            //2. naver
+            var data = [];
+            try {
+                // Navigate to Url
+                await driver.get(item["base_url"]);
+                //wait till loaded
+                await driver.wait(until.elementLocated(By.css('div.contents>div.post_article>div.cont_post')), 10000);
 
-                    let elements = await driver.findElements(By.css('div.contents>div.post_article>div.cont_post'));
-                    let count = 0;
+                let elements = await driver.findElements(By.css('div.contents>div.post_article>div.cont_post'));
+                let count = 0;
 
-                    for (let e of elements) {
-                        if (e != undefined && e != null) {
-                            data.push({
-                                blog_id: item["blog_id"],
-                                title: await e.findElement(By.css("h2>a")).getText(),
-                                post_url: await e.findElement(By.css("h2>a")).getAttribute("href"),
-                                subtitle: await e.findElement(By.css("a.post_txt_wrap>div.post_txt")).getText(),
-                                author: "",
-                                note_dtl: ""
-                            });
-                        }
+                for (let e of elements) {
+                    if (e != undefined && e != null) {
+                        data.push({
+                            blog_id: item["blog_id"],
+                            title: await e.findElement(By.css("h2>a")).getText(),
+                            post_url: await e.findElement(By.css("h2>a")).getAttribute("href"),
+                            subtitle: await e.findElement(By.css("a.post_txt_wrap>div.post_txt")).getText(),
+                            author: "",
+                            note_dtl: ""
+                        });
                     }
                 }
-                catch (error) {
-                    console.log("error occured in " + item["blog_id"]);
-                    console.error(error);
-                }
-                finally {
-                    driver.close();
-                    driver.quit();
-                    //merge into
-                    data.forEach(async function (post) {
-                        await postMerge(post);
-                    });
-                    console.log(item["blog_id"] + " - " + item["title_en"] + " insert completed!");
-                }
-            } catch(e) {
-                console.log(e.toString());
+            }
+            catch (error) {
+                console.log("error occured in " + item["blog_id"]);
+                console.error(error);
+            }
+            finally {
+                await driver.close();
+                await driver.quit();
+                //merge into
+                data.forEach(async function (post) {
+                    await postMerge(post);
+                });
+                console.log(item["blog_id"] + " - " + item["title_en"] + " insert completed!");
             }
         } else if (blog_id == "1003") {//coupang, selenium
             (async () => {
                 var data = [];
-                try {
-                    let driver = await new Builder()
+                let driver = await new Builder()
                         .forBrowser('chrome')
                         .setChromeOptions(options)//option for heroku deployment.
                         .build();
+                try {
                     // Navigate to Url
                     await driver.get(item["base_url"]);
                     //wait till loaded
@@ -191,8 +187,8 @@ const scraping = async function () {
                     console.error(error);
                 }
                 finally{
-                    driver.close();
-                    driver.quit();
+                    await driver.close();
+                    await driver.quit();
                     //merge into
                     data.forEach(async function (post) {
                         await postMerge(post);
@@ -306,11 +302,11 @@ const scraping = async function () {
         } else if (blog_id == "1007") {//nhn, selenium
             (async () => {
                 var data = [];
-                try {
-                    let driver = await new Builder()
+                let driver = await new Builder()
                         .forBrowser('chrome')
                         .setChromeOptions(options)//option for heroku deployment.
                         .build();
+                try {
                     // Navigate to Url
                     await driver.get(item["base_url"]);
                     //wait till loaded
@@ -334,8 +330,8 @@ const scraping = async function () {
                     console.error(error);
                 }
                 finally{
-                    driver.close();
-                    driver.quit();
+                    await driver.close();
+                    await driver.quit();
                     data.forEach(async function (post) {
                         await postMerge(post);
                     });
@@ -345,11 +341,11 @@ const scraping = async function () {
         } else if (blog_id == "1008") {//banksalad, selenium
             (async function example() {
                 var data = [];
-                try {
-                    let driver = await new Builder()
+                let driver = await new Builder()
                         .forBrowser('chrome')
                         .setChromeOptions(options)//option for heroku deployment.
                         .build();
+                try {
                     // Navigate to Url
                     await driver.get(item["base_url"]);
                     //wait till loaded
@@ -369,8 +365,8 @@ const scraping = async function () {
                     }
                 }
                 finally{
-                    driver.close();
-                    driver.quit();
+                    await driver.close();
+                    await driver.quit();
                     data.forEach(async function (post) {
                         await postMerge(post);
                     });
