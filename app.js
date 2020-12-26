@@ -52,7 +52,6 @@ app.listen(port, function(){
     console.log('Server is running on  port ' + port);
 });
 
-
 /*
 의문점 : selenium을 활용하려면 webdriver가 필요한데,
 이거 heroku에서 세팅 가능한지? putty같은걸로 접속 되는지 확인해보기
@@ -69,83 +68,6 @@ https://node-postgres.com/features/pooling
 
 //db setting
 require("./db.js").connect();
-
-/*
-const sql = "SELECT * FROM PG_TABLES WHERE SCHEMANAME = $1";
-
-const values = ['public'];
-
-pool.connect((err, client, done) => {
-	if(err) throw err;
-	client.query(sql, values, (err, res) => {
-		done();
-		if(err) {
-			console.log(err.stack);
-		} else {
-			console.log(res.rows[0]);
-		}
-	});
-});
-*/
-
-//url global object
-const global_urls = [{
-    "title_kr" : "우아한형제들",
-    "title_en" : "wooahan",
-	"route"    : "wooahan",
-    "base_url" : "https://woowabros.github.io"
-}, {
-	"title_kr" : "네이버",
-    "title_en" : "naver",
-	"route"    : "naver",
-    "base_url" : "https://d2.naver.com/home"
-}, {
-	"title_kr" : "쿠팡",
-    "title_en" : "coupang",
-	"route"    : "coupang",
-    "base_url" : "https://medium.com/coupang-tech/technote/home"
-}, {
-	"title_kr" : "스포카",
-    "title_en" : "spoqa",
-	"route"    : "spoqa",
-    "base_url" : "https://spoqa.github.io/"
-}, {
-    "title_kr" : "라인",
-    "title_en" : "line",
-	"route"    : "line",
-    "base_url" : "https://engineering.linecorp.com/ko/blog/"
-}, {
-    "title_kr" : "구글",
-    "title_en" : "google",
-	"route"    : "google",
-    "base_url" : "https://developers.googleblog.com/"
-}, {
-    "title_kr" : "NHN",
-    "title_en" : "nhn",
-	"route"    : "nhn",
-    "base_url" : "https://meetup.toast.com/"
-}, {
-	"title_kr" : "뱅크샐러드",
-	"title_en" : "banksalad",
-	"route"    : "banksalad",
-	"base_url" : "https://blog.banksalad.com/tech/"
-}, {
-	"title_kr" : "레진코믹스",
-	"title_en" : "lezhin",
-	"route"    : "lezhin",
-	"base_url" : "https://tech.lezhin.com/"
-}, {
-	"title_kr" : "카카오",
-	"title_en" : "kakao",
-	"route"    : "kakao",
-	"base_url" : "https://tech.kakao.com/blog/"
-}, {
-	"title_kr" : "VCNC",
-	"title_en" : "VCNC",
-	"route"    : "vcnc",
-	"base_url" : "http://engineering.vcnc.co.kr/"
-}];
-
 
 //for testing body-parser and express-session
 /*
@@ -174,8 +96,6 @@ module.exports = function(app, fs) {
 }
 
 */
-//routing set
-
 /*
 Selenium
 npm install --save selenium-webdriver
@@ -188,110 +108,8 @@ https://www.selenium.dev/documentation/en/getting_started_with_webdriver/locatin
 require("./router.js").route(app);
 
 //FOR TESTING BATCH LOGIC
-app.get("/batchtest", function(req, res) {
-	batch.scraping();
-});
-
-//lezhin
-app.get("/get/lezhin", function(req, res) {
-	//selenium
-	(async function example() {
-		var data = [];
-		let driver = await new Builder().forBrowser('chrome').build();
-		try {
-			// Navigate to Url
-			await driver.get(global_urls[8]["base_url"]);
-			//wait till loaded
-			await driver.wait(until.elementLocated(By.css('ul.post-list>li.post-item')), 10000);
-			
-			let elements = await driver.findElements(By.css('ul.post-list>li.post-item'));
-			let count = 0;
-			for(let e of elements) {
-				data.push({});
-				data[count]["url"] = await e.findElement(By.css("h2>a")).getAttribute("href");
-				data[count]["title"] = await e.findElement(By.css("h2>a")).getText();
-				data[count++]["subtitle"] = await e.findElement(By.css("div.post-summary")).getText();
-			}
-		}
-		finally{
-			driver.quit();
-			res.json(data);
-			/*
-			res.render("lezhin", {
-				title: "레진코믹스",
-				list: data
-			});
-			*/
-		}
-	})();
-});
-
-//kakao
-app.get("/get/kakao", function(req, res) {
-	//selenium
-	(async function example() {
-		var data = [];
-		let driver = await new Builder().forBrowser('chrome').build();
-		try {
-			// Navigate to Url
-			await driver.get(global_urls[9]["base_url"]);
-			//wait till loaded
-			await driver.wait(until.elementLocated(By.css('div.inner_g>div.wrap_post>ul.list_post>li>a.link_post')), 10000);
-			
-			let elements = await driver.findElements(By.css('div.inner_g>div.wrap_post>ul.list_post>li>a.link_post'));
-			let count = 0;
-			for(let e of elements) {
-				data.push({});
-				data[count]["url"] = await e.getAttribute("href");
-				data[count]["title"] = await e.findElement(By.css("strong")).getText();
-				data[count++]["subtitle"] = await e.findElement(By.css("p.desc_post")).getText();
-			}
-		}
-		finally{
-			driver.quit();
-			res.json();
-			/*
-			res.render("kakao", {
-				title: "카카오",
-				list: data
-			});
-			*/
-		}
-	})();
-});
-
-//VCNC
-app.get("/get/vcnc", function(req, res) {
-	//selenium
-	(async function example() {
-		var data = [];
-		let driver = await new Builder().forBrowser('chrome').build();
-		try {
-			// Navigate to Url
-			await driver.get(global_urls[10]["base_url"]);
-			//wait till loaded
-			await driver.wait(until.elementLocated(By.css('ul.archive>li')), 10000);
-			
-			let elements = await driver.findElements(By.css('ul.archive>li'));
-			let count = 0;
-			for(let e of elements) {
-				data.push({});
-				data[count]["url"] = await e.findElement(By.css("a")).getAttribute("href");
-				data[count]["title"] = await e.findElement(By.css("a")).getText();
-				data[count++]["date"] = await e.findElement(By.css("span.posts-date")).getText();
-			}
-		}
-		finally{
-			driver.quit();
-			res.json();
-			/*
-			res.render("vcnc", {
-				title: "VCNC",
-				list: data
-			});
-			*/
-		}
-	})();
+app.get("/batchtest", async function(req, res) {
+	await batch.scraping();
 });
 
 app.get("*", (req, res) => {
