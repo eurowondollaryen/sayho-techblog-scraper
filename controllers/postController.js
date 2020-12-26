@@ -23,9 +23,9 @@ const getPostList = async function(req, res) {
 	var parameters = [req.param("company")];
 	var list = await post.getPostList(parameters);
 	var blogInfo = await blog.getBlogId(parameters);
-	res.render(req.param("company"), {
-		title: blogInfo[0]["title_kr"],
-		list: list
+	res.render("postList", {
+		"title": blogInfo[0]["title_kr"],
+		"list": list
 	});
 };
 
