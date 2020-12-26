@@ -20,8 +20,8 @@ const {Builder, By, Key, until} = require("selenium-webdriver");
 //reference : https://bblog.tistory.com/307
 var schedule = require("node-schedule");
 const batch = require("./batch.js");
-var scheduler = schedule.scheduleJob("00 00 00 * * *", function() {
-	batch.scraping();
+var scheduler = schedule.scheduleJob("00 00 00 * * *", async function() {
+	await batch.scraping();
 });
 
 //port set
