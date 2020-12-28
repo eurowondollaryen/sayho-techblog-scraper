@@ -17,3 +17,23 @@ body {
 	font-family: "NanumGothic", sans-serif;
 	background-color: #F5F5F5;
 }
+
+.post .post-wraper .post-title {
+  cursor: pointer;
+}
+
+.post .post-wraper .post-subtitle {
+  cursor: pointer;
+}
+
+.post .post-wraper .post-title:hover {
+  font-weight: bold;
+}
+
+.post .post-wraper .post-subtitle:hover {
+  font-weight: bold;
+}
+
+.post:hover {
+  background-color: #DDDDDD;
+}

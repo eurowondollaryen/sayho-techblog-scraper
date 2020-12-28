@@ -13,19 +13,18 @@
     <!-- 최초 출력은 최근 10개까지만, 이후는 스크롤 로딩 -->
     <% for(var i = 0; i < (list.length > 10 ? 10 : list.length); ++i) { %>
       
-      <div class="card shadow" style="padding: 20px; margin: 15px;">
-        <div class="fff" onClick="moveTo('<%=list[i]['post_url']%>')">
-          <h4><%=list[i]["title"]%></h4>
-          <p><%=list[i]["subtitle"]%></p>
+      <div class="card shadow post" style="padding: 20px; margin: 15px;">
+        <div class="post-wraper">
+          <h4 class="post-title" onClick="moveTo('<%=list[i]['post_url']%>')"><%=list[i]["title"]%></h4>
+          <p class="post-subtitle"><%=list[i]["subtitle"]%></p>
           <p><%="스크랩 일자 : " + list[i]["inst_dt"].substr(0,4) + "/" + list[i]["inst_dt"].substr(4,2) + "/" + list[i]["inst_dt"].substr(6,2)%></p>
         </div>
       </div>
     <% } %>
     <script>
       /*
-        TODO : 1. HOVER INTERACTION
-        2. MAKE TITLE PRETTIER
-        3. SCROLL LOAD
+        TODO : 1. MAKE TITLE PRETTIER
+        2. SCROLL LOAD
       */
       var moveTo = function(url) {
         window.open(
