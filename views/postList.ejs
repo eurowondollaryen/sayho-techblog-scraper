@@ -6,10 +6,10 @@
     <link href="/css/style.css" rel="stylesheet"/>
 	  <link href="/css/bootstrap/bootstrap.min.css" rel="stylesheet"/>
 	  <script src="/js/jquery/jquery.js"></script>
-	<script src="/js/bootstrap/bootstrap.bundle.min.js"></script>
+	  <script src="/js/bootstrap/bootstrap.bundle.min.js"></script>
   </head>
   <body>
-    <h2><%= title %> 기술블로그 게시글 리스트</h2>
+    <h3 class="post-list-title"><%= title %> 기술블로그 게시글 리스트</h3>
     
     <!-- 최초 출력은 최근 10개까지만, 이후는 스크롤 로딩 -->
     <% for(var i = 0; i < (list.length > 10 ? 10 : list.length); ++i) { %>
@@ -36,25 +36,46 @@
 
       //scroll load
       var count = 0;
-      window.onscroll = function(e) {
-          //window height + window scrollY 값이 document height보다 클 경우,
-          /*
-          이 코드는 스크롤 하단 근접 시, 계속 발동함.
-          if((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
-              count++;
-              console.log(count);
-              
-              var addContent = '<div class="block"><p>'+ count +'번째로 추가된 콘텐츠</p></div>';
-              $('article').append(addContent);
-              
-          }
-          */
-          if($(window).scrollTop() >= $(document).height() - $(window).height()){
-            //TODO : SCROLL LOAD
-            count++;
-            console.log(count);
-          }
-      };
+      var flag_ajax = false;
+      //onload event
+      document.addEventListener("DOMContentLoaded", function() {
+      
+        window.onscroll = function(e) {
+            //window height + window scrollY 값이 document height보다 클 경우,
+            /*
+            이 코드는 스크롤 하단 근접 시, 연속적으로 이벤트 발생하여 주석 처리함.
+            if((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+                count++;
+                console.log(count);
+                
+                var addContent = '<div class="block"><p>'+ count +'번째로 추가된 콘텐츠</p></div>';
+                $('article').append(addContent);
+            }
+            */
+            if($(window).scrollTop() >= $(document).height() - $(window).height()){
+              //TODO
+              //TODO 1. SCROLL LOAD 발동 시 DB 조회
+              //TODO 2. 조회된 값을 HTML RENDERING(WITH REACT.JS)
+              if(!flag_ajax) {
+                flag_ajax = true;
+                $.ajax({
+                  type: "post",
+                  url: "/postList",
+                  data: {rowcount : 10},
+                  success: function(result) {
+                    console.log("scroll load completed.")
+                    console.log(result.data.msg);
+                    flag_ajax = false;
+                  },
+                  error : function(xhr, textStatus, errorThrown) {
+                    alert("failed to request.\n" + xhr.status + " " + xhr.statusText);
+                    flag_ajax = false;
+                  }
+                });
+              }
+            }
+        };
+      });
     </script>
   </body>
 </html>

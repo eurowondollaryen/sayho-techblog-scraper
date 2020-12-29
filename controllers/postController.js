@@ -17,7 +17,7 @@ const remove = function(req, res) {
 	console.log("remove");
 };
 
-const getPostList = async function(req, res) {
+const getPostListGet = async function(req, res) {
 	console.log("[postController][getPostList]request data : " + req.param("company"));
 	
 	var parameters = [req.param("company")];
@@ -29,9 +29,17 @@ const getPostList = async function(req, res) {
 	});
 };
 
+const getPostListPost = async function(req, res) {
+	console.log("[postController][getPostList2] request data : " + req.param("rowcount"));
+	res.send({
+		data: {msg : "hello"}
+	});
+}
+
 //export controller functions
 exports.list = list;
 exports.create = create;
 exports.update = update;
 exports.remove = remove;
-exports.getPostList = getPostList;
+exports.getPostListGet = getPostListGet;
+exports.getPostListPost = getPostListPost;

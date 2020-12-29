@@ -37,3 +37,9 @@ body {
 .post:hover {
   background-color: #DDDDDD;
 }
+
+.post-list-title {
+  text-align: left;
+  margin: 18px;
+  font-weight: bold;
+}
