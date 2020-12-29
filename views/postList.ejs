@@ -10,18 +10,19 @@
   </head>
   <body>
     <h3 class="post-list-title"><%= title %> 기술블로그 게시글 리스트</h3>
-    
-    <!-- 최초 출력은 최근 10개까지만, 이후는 스크롤 로딩 -->
-    <% for(var i = 0; i < (list.length > 10 ? 10 : list.length); ++i) { %>
-      
-      <div class="card shadow post" style="padding: 20px; margin: 15px;">
-        <div class="post-wraper">
-          <h4 class="post-title" onClick="moveTo('<%=list[i]['post_url']%>')"><%=list[i]["title"]%></h4>
-          <p class="post-subtitle"><%=list[i]["subtitle"]%></p>
-          <p><%="스크랩 일자 : " + list[i]["inst_dt"].substr(0,4) + "/" + list[i]["inst_dt"].substr(4,2) + "/" + list[i]["inst_dt"].substr(6,2)%></p>
+    <div class="post-list" id="postlist">
+      <!-- 최초 출력은 최근 10개까지만, 이후는 스크롤 로딩 -->
+      <% for(var i = 0; i < (list.length > 10 ? 10 : list.length); ++i) { %>
+        
+        <div class="card shadow post" style="padding: 20px; margin: 15px;">
+          <div class="post-wraper">
+            <h4 class="post-title" onClick="moveTo('<%=list[i]['post_url']%>')"><%=list[i]["title"]%></h4>
+            <p class="post-subtitle"><%=list[i]["subtitle"]%></p>
+            <p><%="스크랩 일자 : " + list[i]["inst_dt"].substr(0,4) + "/" + list[i]["inst_dt"].substr(4,2) + "/" + list[i]["inst_dt"].substr(6,2)%></p>
+          </div>
         </div>
-      </div>
-    <% } %>
+      <% } %>
+    </div>
     <script>
       /*
         TODO : 1. MAKE TITLE PRETTIER
@@ -57,11 +58,16 @@
               //TODO 1. SCROLL LOAD 발동 시 DB 조회
               //TODO 2. 조회된 값을 HTML RENDERING(WITH REACT.JS)
               if(!flag_ajax) {
+                var company = location.href.split('?')[1].split('=')[1];
+                var rowcount = document.getElementById("postlist").childElementCount;
                 flag_ajax = true;
                 $.ajax({
                   type: "post",
                   url: "/postList",
-                  data: {rowcount : 10},
+                  data: {
+                    "rowcount" : rowcount,
+                    "company": company
+                  },
                   success: function(result) {
                     console.log("scroll load completed.")
                     console.log(result.data.msg);
