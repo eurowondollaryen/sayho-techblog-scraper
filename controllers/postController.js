@@ -30,9 +30,10 @@ const getPostListGet = async function(req, res) {
 };
 
 const getPostListPost = async function(req, res) {
-	console.log("[postController][getPostList2] request data : " + req.param("rowcount"));
+	console.log("[postController][getPostList2] request data : " + req);
+	var parameters = [req.param("company"), req.param("rowcount")];
 	res.send({
-		data: {msg : "hello"}
+		data: await post.postPostList(parameters)
 	});
 }
 

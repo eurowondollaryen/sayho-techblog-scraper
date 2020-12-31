@@ -27,12 +27,10 @@ body {
 }
 
 .post .post-wraper .post-title:hover {
-  transition: 0.2s;
   font-weight: bold;
 }
 
 .post .post-wraper .post-subtitle:hover {
-  transition: 0.2s;
   font-weight: bold;
 }
 

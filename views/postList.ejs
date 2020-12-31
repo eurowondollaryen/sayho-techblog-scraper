@@ -17,7 +17,7 @@
         <div class="card shadow post" style="padding: 20px; margin: 15px;">
           <div class="post-wraper">
             <h4 class="post-title" onClick="moveTo('<%=list[i]['post_url']%>')"><%=list[i]["title"]%></h4>
-            <p class="post-subtitle"><%=list[i]["subtitle"]%></p>
+            <p class="post-subtitle" onClick="moveTo('<%=list[i]['post_url']%>')"><%=list[i]["subtitle"]%></p>
             <p><%="스크랩 일자 : " + list[i]["inst_dt"].substr(0,4) + "/" + list[i]["inst_dt"].substr(4,2) + "/" + list[i]["inst_dt"].substr(6,2)%></p>
           </div>
         </div>
@@ -55,8 +55,9 @@
             */
             if($(window).scrollTop() >= $(document).height() - $(window).height()){
               //TODO
-              //TODO 1. SCROLL LOAD 발동 시 DB 조회
+              //TODO 1. SCROLL LOAD 발동 시 DB 조회 (done. 모든 post가 조회되었을 때도 예외처리 필요)
               //TODO 2. 조회된 값을 HTML RENDERING(WITH REACT.JS)
+              //TODO 3. 포스트 클릭 시, 해당 포스트에 대해 클릭한 로그 남기기(포스트ID, IP, 시간)
               if(!flag_ajax) {
                 var company = location.href.split('?')[1].split('=')[1];
                 var rowcount = document.getElementById("postlist").childElementCount;
@@ -65,12 +66,12 @@
                   type: "post",
                   url: "/postList",
                   data: {
-                    "rowcount" : rowcount,
-                    "company": company
+                    "company": company,
+                    "rowcount" : rowcount
                   },
                   success: function(result) {
                     console.log("scroll load completed.")
-                    console.log(result.data.msg);
+                    console.log(result.data);
                     flag_ajax = false;
                   },
                   error : function(xhr, textStatus, errorThrown) {
