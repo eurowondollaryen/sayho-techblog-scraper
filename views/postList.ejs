@@ -14,7 +14,7 @@
       <!-- 최초 출력은 최근 10개까지만, 이후는 스크롤 로딩 -->
       <% for(var i = 0; i < (list.length > 10 ? 10 : list.length); ++i) { %>
         
-        <div class="card shadow post" style="padding: 20px; margin: 15px;">
+        <div class="card shadow post p20m15">
           <div class="post-wraper">
             <h4 class="post-title" onClick="moveTo('<%=list[i]['post_url']%>')"><%=list[i]["title"]%></h4>
             <p class="post-subtitle" onClick="moveTo('<%=list[i]['post_url']%>')"><%=list[i]["subtitle"]%></p>
@@ -38,6 +38,34 @@
       //scroll load
       var count = 0;
       var flag_ajax = false;
+      var renderPostlist = function(list) {
+        var postList = document.getElementById("postlist");
+        for(var i = 0; i < list.length; ++i) {
+          var wrapper1 = document.createElement("div");
+          wrapper1.setAttribute("class", "card shadow post p20m15");
+          var wrapper2 = document.createElement("div");
+          wrapper2.classList.add("post-wraper");
+
+          var postTitle = document.createElement("h4");
+          postTitle.classList.add("post-title");
+          postTitle.setAttribute("onClick", "moveTo('" + list[i]["post_url"] + "')");
+          postTitle.innerHTML = list[i]["title"];
+
+          var postSubTitle = document.createElement("p");
+          postSubTitle.classList.add("post-subtitle");
+          postSubTitle.setAttribute("onClick", "moveTo('" + list[i]["post_url"] + "')");
+          postSubTitle.innerHTML = list[i]["subtitle"];
+          
+          var scrapDate = document.createElement("p");
+          scrapDate.innerHTML = "스크랩 일자 : " + list[i]["inst_dt"].substr(0,4) + "/" + list[i]["inst_dt"].substr(4,2) + "/" + list[i]["inst_dt"].substr(6,2);
+
+          wrapper2.appendChild(postTitle);
+          wrapper2.appendChild(postSubTitle);
+          wrapper2.appendChild(scrapDate);
+          wrapper1.appendChild(wrapper2);
+          postList.appendChild(wrapper1);
+        }
+      };
       //onload event
       document.addEventListener("DOMContentLoaded", function() {
       
@@ -56,12 +84,13 @@
             if($(window).scrollTop() >= $(document).height() - $(window).height()){
               //TODO
               //TODO 1. SCROLL LOAD 발동 시 DB 조회 (done. 모든 post가 조회되었을 때도 예외처리 필요)
-              //TODO 2. 조회된 값을 HTML RENDERING(WITH REACT.JS)
+              //TODO 2. 조회된 값을 HTML RENDERING(done. react.js 활용 필요)
               //TODO 3. 포스트 클릭 시, 해당 포스트에 대해 클릭한 로그 남기기(포스트ID, IP, 시간)
               if(!flag_ajax) {
                 var company = location.href.split('?')[1].split('=')[1];
                 var rowcount = document.getElementById("postlist").childElementCount;
                 flag_ajax = true;
+                
                 $.ajax({
                   type: "post",
                   url: "/postList",
@@ -72,6 +101,7 @@
                   success: function(result) {
                     console.log("scroll load completed.")
                     console.log(result.data);
+                    renderPostlist(result.data);//이 데이터를 렌더링하자.
                     flag_ajax = false;
                   },
                   error : function(xhr, textStatus, errorThrown) {
