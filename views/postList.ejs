@@ -3,10 +3,18 @@
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Tech Blog Web Scraper - <%= title %></title>
+    
+    <link href="/css/bootstrap/bootstrap.min.css" rel="stylesheet"/>
     <link href="/css/style.css" rel="stylesheet"/>
-	  <link href="/css/bootstrap/bootstrap.min.css" rel="stylesheet"/>
-	  <script src="/js/jquery/jquery.js"></script>
-	  <script src="/js/bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="/js/jquery/jquery.js"></script>
+    <script src="/js/bootstrap/bootstrap.bundle.min.js">
+    
+      //TODO
+      //TODO 1. SCROLL LOAD 발동 시 DB 조회 (done. 모든 post가 조회되었을 때도 예외처리 필요 -> done.)
+      //TODO 2. 조회된 값을 HTML RENDERING(done. react.js 활용 필요)
+      //TODO 3. 포스트 클릭 시, 해당 포스트에 대해 클릭한 로그 남기기(포스트ID, IP, 시간) -> done.
+      //TODO 4. DARK MODE
+    </script>
   </head>
   <body>
     <div class="container" id="body">
@@ -17,8 +25,8 @@
           
           <div class="card shadow post p20m15">
             <div class="post-wraper">
-              <h4 class="post-title" onClick="moveTo('<%=list[i]['post_url']%>')"><%=list[i]["title"]%></h4>
-              <p class="post-subtitle" onClick="moveTo('<%=list[i]['post_url']%>')"><%=list[i]["subtitle"]%></p>
+              <h4 class="post-title" onClick="moveTo('<%=list[i]['post_url']%>', <%=list[i]['post_seq']%>)"><%=list[i]["title"]%></h4>
+              <p class="post-subtitle" onClick="moveTo('<%=list[i]['post_url']%>', <%=list[i]['post_seq']%>)"><%=list[i]["subtitle"]%></p>
               <p><%="스크랩 일자 : " + list[i]["inst_dt"].substr(0,4) + "/" + list[i]["inst_dt"].substr(4,2) + "/" + list[i]["inst_dt"].substr(6,2)%></p>
             </div>
           </div>
@@ -26,16 +34,26 @@
       </div>
     </div>
     <script>
-      /*
-        TODO : 1. MAKE TITLE PRETTIER
-        2. SCROLL LOAD
-      */
-      var moveTo = function(url) {
+      var moveTo = function(url, post_seq) {
+        $.ajax({
+                type: "post",
+                url: "/createlog",
+                data: {
+                  "post_seq": post_seq,
+                  "dtl_note": url
+                },
+                success: function(result) {
+                  console.log(result.data);
+                },
+                error : function(xhr, textStatus, errorThrown) {
+                  alert("failed to request.\n" + xhr.status + " " + xhr.statusText);
+                }
+              });
         window.open(
           url,
           '_blank'//open url in new window
         );
-      }
+      };
 
       //scroll load
       var countAllPosts = <%=list.length%>;
@@ -101,10 +119,6 @@
             }
             */
             if($(window).scrollTop() >= $(document).height() - $(window).height()){
-              //TODO
-              //TODO 1. SCROLL LOAD 발동 시 DB 조회 (done. 모든 post가 조회되었을 때도 예외처리 필요 -> done.)
-              //TODO 2. 조회된 값을 HTML RENDERING(done. react.js 활용 필요)
-              //TODO 3. 포스트 클릭 시, 해당 포스트에 대해 클릭한 로그 남기기(포스트ID, IP, 시간)
               if(!flag_ajax) {
                 var company = location.href.split('?')[1].split('=')[1];
                 var rowcount = document.getElementById("postlist").childElementCount;

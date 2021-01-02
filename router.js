@@ -6,9 +6,9 @@ app.js로부터 express()를 통해 생성한 app parameter를 넘겨받아
 */
 
 //binding controller
-//var mainController = require("./controllers/mainController.js");
 var postController = require("./controllers/postController.js");
 var blogController = require("./controllers/blogController.js");
+var logController = require("./controllers/logController.js");
 
 exports.route = function(app) {
 	//main route
@@ -27,4 +27,6 @@ exports.route = function(app) {
 	app.get("/removeBlog", blogController.remove);
 	app.get("/blogList", blogController.getBlogList);
 	
+	//log route
+	app.post("/createlog", logController.create);
 };
