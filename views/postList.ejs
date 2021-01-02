@@ -36,7 +36,7 @@
           </div>
         <% } %>
       </div>
-      <button id="theme_btn" class="btn btn-dark" onClick="switchTheme(this)">다크 모드로 보기</button>
+      <button id="theme_btn" class="btn btn-dark" onClick="switchTheme(this.classList[1].split('-')[1])">다크 모드로 보기</button>
     </div>
     <script src="/js/theme.js"></script>
     <script>
