@@ -108,7 +108,7 @@ https://www.selenium.dev/documentation/en/getting_started_with_webdriver/locatin
 require("./router.js").route(app);
 
 //FOR TESTING BATCH LOGIC
-app.get("/batchtest", async function(req, res) {
+app.get("/runbatch", async function(req, res) {
 	await batch.scraping();
 });
 

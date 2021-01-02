@@ -8,9 +8,53 @@
 	src: url("/font/NanumGothic-Regular.woff") format('woff');
 }
 
+:root[data-theme="light"] {
+  --primary-color: #0072a3;
+  --text-color: #333333;
+  --bg-color: #fafafa;
+  --component-bg-color: #ffffff;
+  --component-bg-color-hover: #dadada;
+}
+
+:root[data-theme="dark"] {
+  --primary-color: #49afd9;
+  --text-color: #e3f5fc;
+  --bg-color: #1b2a32;
+  --component-bg-color: #22343c;
+  --component-bg-color-hover: #3e5e6b;
+}
+
 body {
-	font-family: "NanumGothic", sans-serif;
-	background-color: #F5F5F5;
+  font-family: "NanumGothic", sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+.component {
+  background-color: var(--component-bg-color);
+  color: var(--text-color);
+}
+
+h1 {
+  color: var(--primary-color);
+}
+
+h3 {
+  color: var(--text-color);
+}
+th {
+  color: var(--text-color);
+}
+td {
+  color: var(--text-color);
+}
+
+#theme_btn {
+  position: fixed;
+  width: 180px;
+  height: 51px;
+  bottom: 10px;
+  right: 20px;
 }
 
 .post {
@@ -35,7 +79,7 @@ body {
 
 .post:hover {
   transition: 0.5s;
-  background-color: #DDDDDD;
+  background-color: var(--component-bg-color-hover);
 }
 
 .post-list-title {

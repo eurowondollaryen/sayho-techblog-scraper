@@ -13,7 +13,11 @@
       //TODO 1. SCROLL LOAD 발동 시 DB 조회 (done. 모든 post가 조회되었을 때도 예외처리 필요 -> done.)
       //TODO 2. 조회된 값을 HTML RENDERING(done. react.js 활용 필요)
       //TODO 3. 포스트 클릭 시, 해당 포스트에 대해 클릭한 로그 남기기(포스트ID, IP, 시간) -> done.
-      //TODO 4. DARK MODE
+      //TODO 4. DARK MODE -> done.
+      //TODO 5. BACKOFFICE(조회 통계, 배치 관리)
+      //TODO 6. index.ejs에 뉴스피드
+      //TODO 7. 포스트별 LIKE BUTTON
+      //TODO 8. 검색 기능
     </script>
   </head>
   <body>
@@ -23,7 +27,7 @@
         <!-- 최초 출력은 최근 10개까지만, 이후는 스크롤 로딩 -->
         <% for(var i = 0; i < (list.length > 10 ? 10 : list.length); ++i) { %>
           
-          <div class="card shadow post p20m15">
+          <div class="card shadow post p20m15 component">
             <div class="post-wraper">
               <h4 class="post-title" onClick="moveTo('<%=list[i]['post_url']%>', <%=list[i]['post_seq']%>)"><%=list[i]["title"]%></h4>
               <p class="post-subtitle" onClick="moveTo('<%=list[i]['post_url']%>', <%=list[i]['post_seq']%>)"><%=list[i]["subtitle"]%></p>
@@ -32,7 +36,9 @@
           </div>
         <% } %>
       </div>
+      <button id="theme_btn" class="btn btn-dark" onClick="switchTheme(this)">다크 모드로 보기</button>
     </div>
+    <script src="/js/theme.js"></script>
     <script>
       var moveTo = function(url, post_seq) {
         $.ajax({
@@ -63,7 +69,7 @@
         var postList = document.getElementById("postlist");
         for(var i = 0; i < list.length; ++i) {
           var wrapper1 = document.createElement("div");
-          wrapper1.setAttribute("class", "card shadow post p20m15");
+          wrapper1.setAttribute("class", "card shadow post p20m15 component");
           var wrapper2 = document.createElement("div");
           wrapper2.classList.add("post-wraper");
 
@@ -90,7 +96,7 @@
 
       var printLoading = function() {
           var wrapper = document.createElement("div");
-          wrapper.setAttribute("class", "card shadow loading-wrapper m15");
+          wrapper.setAttribute("class", "card shadow loading-wrapper m15 component");
           wrapper.setAttribute("id", "loadgif");
 
           var loadingImg = document.createElement("img");
@@ -105,7 +111,7 @@
       };
       //onload event
       document.addEventListener("DOMContentLoaded", function() {
-      
+		    switchTheme(window.localStorage.theme);
         window.onscroll = function(e) {
             //window height + window scrollY 값이 document height보다 클 경우,
             /*

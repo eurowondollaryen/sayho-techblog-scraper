@@ -13,7 +13,7 @@
 		<h1 style="text-align: center;" class="text-centered"><strong>&#128240;Tech Blog Web Scraper</strong></h1>
 		<h3 style="text-align: center;">by <a href="https://www.github.com/eurowondollaryen">eurowondollaryen</a></h3>
 		<h4><strong>Blog List</strong></h4>
-		<div class="card shadow" style="padding: 20px; margin: 15px;">
+		<div class="card shadow component" style="padding: 20px; margin: 15px;">
 		<table class="table table-hover">
 			<thead>
 				<tr>
@@ -35,7 +35,13 @@
 		</div>
 		<!-- We will put our React component inside this div. -->
 		<p>if you like this website, press like button below <div id="like_button_container"></div></p>
+		<button id="theme_btn" class="btn btn-dark" onClick="switchTheme(this.classList[1].split('-')[1])">다크 모드로 보기</button>
 	</div>
+
+	<script src="/js/theme.js"></script>
+	<script>
+		switchTheme(window.localStorage.theme);
+	</script>
 	<!-- Load React. -->
     <!-- Note: when deploying, replace "development.js" with "production.min.js". -->
     <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
