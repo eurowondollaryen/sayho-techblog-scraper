@@ -18,6 +18,10 @@ body {
 	background-color: #F5F5F5;
 }
 
+.post {
+  width: 100%;
+}
+
 .post .post-wraper .post-title {
   cursor: pointer;
 }
@@ -47,4 +51,19 @@ body {
 
 .p20m15 {
   padding: 20px; margin: 15px;
+}
+
+.m15 {
+  margin: 15px;
+}
+
+.loading-wrapper {
+  width: 100%;
+  height: 256px;
+}
+
+.loading-img {
+  width: 256px;
+  height: 256px;
+  margin: 0 auto;
 }

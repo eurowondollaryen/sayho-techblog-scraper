@@ -9,19 +9,21 @@
 	  <script src="/js/bootstrap/bootstrap.bundle.min.js"></script>
   </head>
   <body>
-    <h3 class="post-list-title"><%= title %> 기술블로그 게시글 리스트</h3>
-    <div class="post-list" id="postlist">
-      <!-- 최초 출력은 최근 10개까지만, 이후는 스크롤 로딩 -->
-      <% for(var i = 0; i < (list.length > 10 ? 10 : list.length); ++i) { %>
-        
-        <div class="card shadow post p20m15">
-          <div class="post-wraper">
-            <h4 class="post-title" onClick="moveTo('<%=list[i]['post_url']%>')"><%=list[i]["title"]%></h4>
-            <p class="post-subtitle" onClick="moveTo('<%=list[i]['post_url']%>')"><%=list[i]["subtitle"]%></p>
-            <p><%="스크랩 일자 : " + list[i]["inst_dt"].substr(0,4) + "/" + list[i]["inst_dt"].substr(4,2) + "/" + list[i]["inst_dt"].substr(6,2)%></p>
+    <div class="container" id="body">
+      <h3 class="post-list-title"><%= title %> 기술블로그 게시글 리스트</h3>
+      <div class="post-list" id="postlist">
+        <!-- 최초 출력은 최근 10개까지만, 이후는 스크롤 로딩 -->
+        <% for(var i = 0; i < (list.length > 10 ? 10 : list.length); ++i) { %>
+          
+          <div class="card shadow post p20m15">
+            <div class="post-wraper">
+              <h4 class="post-title" onClick="moveTo('<%=list[i]['post_url']%>')"><%=list[i]["title"]%></h4>
+              <p class="post-subtitle" onClick="moveTo('<%=list[i]['post_url']%>')"><%=list[i]["subtitle"]%></p>
+              <p><%="스크랩 일자 : " + list[i]["inst_dt"].substr(0,4) + "/" + list[i]["inst_dt"].substr(4,2) + "/" + list[i]["inst_dt"].substr(6,2)%></p>
+            </div>
           </div>
-        </div>
-      <% } %>
+        <% } %>
+      </div>
     </div>
     <script>
       /*
@@ -36,6 +38,7 @@
       }
 
       //scroll load
+      var countAllPosts = <%=list.length%>;
       var count = 0;
       var flag_ajax = false;
       var renderPostlist = function(list) {
@@ -66,6 +69,22 @@
           postList.appendChild(wrapper1);
         }
       };
+
+      var printLoading = function() {
+          var wrapper = document.createElement("div");
+          wrapper.setAttribute("class", "card shadow loading-wrapper m15");
+          wrapper.setAttribute("id", "loadgif");
+
+          var loadingImg = document.createElement("img");
+          loadingImg.classList.add("loading-img");
+          loadingImg.setAttribute("src", "/img/loading.gif");
+          wrapper.appendChild(loadingImg);
+          
+          document.getElementById("body").appendChild(wrapper);
+      };
+      var unprintLoading = function() {
+        document.getElementById("loadgif").remove();
+      };
       //onload event
       document.addEventListener("DOMContentLoaded", function() {
       
@@ -83,14 +102,15 @@
             */
             if($(window).scrollTop() >= $(document).height() - $(window).height()){
               //TODO
-              //TODO 1. SCROLL LOAD 발동 시 DB 조회 (done. 모든 post가 조회되었을 때도 예외처리 필요)
+              //TODO 1. SCROLL LOAD 발동 시 DB 조회 (done. 모든 post가 조회되었을 때도 예외처리 필요 -> done.)
               //TODO 2. 조회된 값을 HTML RENDERING(done. react.js 활용 필요)
               //TODO 3. 포스트 클릭 시, 해당 포스트에 대해 클릭한 로그 남기기(포스트ID, IP, 시간)
               if(!flag_ajax) {
                 var company = location.href.split('?')[1].split('=')[1];
                 var rowcount = document.getElementById("postlist").childElementCount;
+                if(countAllPosts == rowcount) return;//이미 다 load했으면 서버 request하지 않음.
                 flag_ajax = true;
-                
+                printLoading();
                 $.ajax({
                   type: "post",
                   url: "/postList",
@@ -99,14 +119,16 @@
                     "rowcount" : rowcount
                   },
                   success: function(result) {
-                    console.log("scroll load completed.")
-                    console.log(result.data);
+                    //console.log("scroll load completed.");
+                    //console.log(result.data);
                     renderPostlist(result.data);//이 데이터를 렌더링하자.
                     flag_ajax = false;
+                    unprintLoading();
                   },
                   error : function(xhr, textStatus, errorThrown) {
                     alert("failed to request.\n" + xhr.status + " " + xhr.statusText);
                     flag_ajax = false;
+                    unprintLoading();
                   }
                 });
               }
