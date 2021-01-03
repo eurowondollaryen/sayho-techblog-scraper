@@ -57,8 +57,21 @@ td {
   right: 20px;
 }
 
-.post {
-  width: 100%;
+.title {
+  margin: 20px;
+  text-align: center;
+}
+
+.subtitle {
+  margin: 5px;
+  text-align: center;
+}
+
+.tabtitle {
+  height: 30px;
+  margin: 10px;
+  text-align: left;
+  vertical-align: middle;
 }
 
 .post .post-wraper .post-title {
@@ -80,6 +93,10 @@ td {
 .post:hover {
   transition: 0.5s;
   background-color: var(--component-bg-color-hover);
+}
+
+.post-list {
+  width: 100%;
 }
 
 .post-list-title {
