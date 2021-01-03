@@ -26,7 +26,12 @@
 				<% for(var i = 0; i < list.length; ++i) { %>
 				<tr>
 					<td><%=i+1%></td>
-					<td><a href='/postList?company=<%=list[i]["route"]%>'><%= list[i]["title_kr"] %></a></td>
+					<td>
+						<a href='/postList?company=<%=list[i]["route"]%>'><%= list[i]["title_kr"] %></a>
+						<% if(list[i]["newpost"] == "1") { %>
+							&#127381;
+						<% } %>
+					</td>
 					<td style="text-align: right;"><%= list[i]["cnt"] %></td>
 				</tr>
 				<% } %>
