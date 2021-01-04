@@ -19,8 +19,8 @@ const remove = function(req, res) {
 
 const getPostListGet = async function(req, res) {
 	console.log("[postController][getPostList]request data : " + req.param("company"));
-	
 	var parameters = [req.param("company")];
+	//todo : parameter 이상한 값이 들어오면 예외처리
 	var list = await post.getPostList(parameters);
 	var blogInfo = await blog.getBlogId(parameters);
 	res.render("postList", {
