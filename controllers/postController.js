@@ -20,9 +20,20 @@ const remove = function(req, res) {
 const getPostListGet = async function(req, res) {
 	console.log("[postController][getPostList]request data : " + req.param("company"));
 	var parameters = [req.param("company")];
-	//todo : parameter 이상한 값이 들어오면 예외처리
+	//parameter가 null이면 404
+	if(parameters[0] == null || parameters[0] == undefined) {
+		res.end('<head><title>404</title></head><body><h1>404 Error!</h1></body>');
+		return;
+	}
+
 	var list = await post.getPostList(parameters);
 	var blogInfo = await blog.getBlogId(parameters);
+	//없는 회사명을 입력했을 경우 404
+	if(blogInfo[0] == null || blogInfo[0] == undefined) {
+		res.end('<head><title>404</title></head><body><h1>404 Error!</h1></body>');
+		return;
+	}
+
 	res.render("postList", {
 		"title": blogInfo[0]["title_kr"],
 		"list": list
