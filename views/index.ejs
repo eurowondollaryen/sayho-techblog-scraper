@@ -12,6 +12,14 @@
 	<div class="container">
 		<h1 class="text-centered title"><strong>&#128240;Tech Blog Web Scraper</strong></h1>
 		<h3 class="subtitle">by <a href="https://www.github.com/eurowondollaryen">eurowondollaryen</a></h3>
+
+		
+		<h4 class="tabtitle"><strong>Search</strong></h4>
+		<div class="card shadow component  searchbar-wrapper">
+			<input id="search_box" class="search-box component" onkeypress="queryEnter()"/>
+			<button id="search_btn" class="search-btn btn btn-dark" onclick="query()">검색</button>
+		</div>
+
 		<h4 class="tabtitle"><strong>Blog List</strong></h4>
 		<div class="card shadow component" style="padding: 20px; margin: 15px;">
 		<table class="table table-hover">
@@ -45,7 +53,43 @@
 
 	<script src="/js/theme.js"></script>
 	<script>
-		switchTheme(window.localStorage.theme);
+		
+	</script>
+	<script>
+		var requestQuery = function(queryText) {
+			if(queryText.length < 1) {
+				alert("검색어를 입력해 주세요.");
+				return;
+			}
+			
+			$.ajax({
+				type: "post",
+                url: "/query",//todo : 검색 백엔드 개발
+                data: {
+                  "queryText": queryText
+                },
+                success: function(result) {
+				  console.log(result.data);
+                },
+                error : function(xhr, textStatus, errorThrown) {
+				  alert("failed to request.\n" + xhr.status + " " + xhr.statusText);
+                }
+			});
+		}
+		var queryEnter = function() {
+			if(event.keyCode == 13) {
+				query();
+			}
+		}
+		var query = function() {
+			var queryText = document.getElementById("search_box").value;
+			requestQuery(queryText);
+		};
+		//onload event
+		document.addEventListener("DOMContentLoaded", function() {
+			switchTheme(window.localStorage.theme);
+		});
+		
 	</script>
 	<!-- Load React. -->
     <!-- Note: when deploying, replace "development.js" with "production.min.js". -->
