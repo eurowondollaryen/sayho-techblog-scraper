@@ -13,8 +13,8 @@
 ## Tech Stack
 - Frondend : ejs + React.js
 - Backend : Node.js(express)
-- <del>axios (url로부터 html을 가져오는 라이브러리)</del>
-- <del>cheerio (가져온 html 데이터를 querySelector처럼 접근할 수 있게 도와주는 라이브러리)</del>
+- axios (url로부터 html을 가져오는 라이브러리) - 정적 페이지 scraping에 사용.
+- cheerio (가져온 html 데이터를 querySelector처럼 접근할 수 있게 도와주는 라이브러리)
 - selenium (동적인 웹페이지까지 스크래핑 가능한 라이브러리. 브라우저 드라이버가 필요하다.)
 
 ## How to run my code
