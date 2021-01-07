@@ -18,7 +18,7 @@
   </head>
   <body>
     <div class="container" id="body">
-      <h3 class="post-list-title"><%= title %> 기술블로그 게시글 리스트</h3>
+      <h3 class="post-list-title"><%= queryText %> - 검색 결과</h3>
       <div class="post-list" id="postlist">
         <!-- 최초 출력은 최근 10개까지만, 이후는 스크롤 로딩 -->
         <% for(var i = 0; i < (list.length > 10 ? 10 : list.length); ++i) { %>

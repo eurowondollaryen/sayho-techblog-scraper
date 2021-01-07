@@ -61,20 +61,7 @@
 				alert("검색어를 입력해 주세요.");
 				return;
 			}
-			
-			$.ajax({
-				type: "post",
-                url: "/query",//todo : 검색 백엔드 개발
-                data: {
-                  "queryText": queryText
-                },
-                success: function(result) {
-				  console.log(result.data);
-                },
-                error : function(xhr, textStatus, errorThrown) {
-				  alert("failed to request.\n" + xhr.status + " " + xhr.statusText);
-                }
-			});
+			window.location.href = "/query?queryText=" + queryText;
 		}
 		var queryEnter = function() {
 			if(event.keyCode == 13) {

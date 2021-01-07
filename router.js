@@ -32,5 +32,5 @@ exports.route = function(app) {
 	app.post("/createlog", logController.create);
 
 	//query route
-	app.post("/query", queryController.list);
+	app.get("/query", queryController.list);
 };
