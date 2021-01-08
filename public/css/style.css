@@ -147,3 +147,7 @@ td {
   margin: 0 auto;
   outline: none;
 }
+
+.highlight {
+  background-color: yellow;
+}
