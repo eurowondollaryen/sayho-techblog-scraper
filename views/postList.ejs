@@ -135,7 +135,7 @@
           }
           if($(window).scrollTop() + diff >= $(document).height() - $(window).height()){
             if(!flag_ajax) {
-              var company = location.href.split('?')[1].split('=')[1];
+              var company = decodeURI(location.href.split('?')[1].split('=')[1]);
               var rowcount = document.getElementById("postlist").childElementCount;
               if(countAllPosts == rowcount) return;//이미 다 load했으면 서버 request하지 않음.
               flag_ajax = true;

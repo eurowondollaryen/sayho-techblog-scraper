@@ -5,20 +5,42 @@ ORDER BY 기준 : 매일 순서대로 크롤링하여 INSERT 하므로, 새 글�
 그러므로 ORDER BY INST_DT DESC, POST_SEQ ASC로 하여, 갱신일별, 포스트 순서대로 조회한다.
 */
 const pool = require('../db.js').pool;
-exports.list = async function(parameters) {
+exports.listGet = async function(parameters) {
 	var list = [];
-	await pool.query("SELECT POST_SEQ, TITLE, POST_URL,"
-	+ " SUBTITLE, AUTHOR, NOTE_DTL, INST_DT"
-	+ ", CASE WHEN INST_DT = TO_CHAR(NOW(), 'YYYYMMDD') THEN '1' ELSE '0' END NEWPOST "
-	+ ", (SELECT COUNT(1) FROM (SELECT DISTINCT POST_SEQ, IP FROM ICTVIEWLOG) A WHERE A.POST_SEQ = T.POST_SEQ) VIEWCOUNT"
-	+ " FROM ICTPOSTS T WHERE TITLE LIKE '%' || $1 || '%' ORDER BY INST_DT DESC, POST_SEQ ASC", parameters)
+	await pool.query(`SELECT ROWNUM, POST_SEQ, TITLE
+	, POST_URL, SUBTITLE, AUTHOR
+	, NOTE_DTL, INST_DT, NEWPOST
+	, VIEWCOUNT
+FROM (SELECT ROW_NUMBER() OVER(ORDER BY INST_DT DESC, POST_SEQ ASC) ROWNUM
+		  , POST_SEQ, TITLE, POST_URL
+		  , SUBTITLE, AUTHOR, NOTE_DTL, INST_DT
+		  , CASE WHEN INST_DT = TO_CHAR(NOW(), 'YYYYMMDD') THEN '1' ELSE '0' END NEWPOST 
+		  , (SELECT COUNT(1) FROM (SELECT DISTINCT POST_SEQ, IP FROM ICTVIEWLOG) A WHERE A.POST_SEQ = T.POST_SEQ) VIEWCOUNT
+   FROM ICTPOSTS T
+   WHERE TITLE LIKE '%' || $1 || '%'
+   ) A
+ORDER BY ROWNUM`, parameters)
 	.then(function(res) { list = res.rows;});
 	return list;
 }
-/*
-query 결과 쿼리 작성중.. 미완성
-SELECT ROWNUM, 
-FROM (SELECT (ROW_NUMBER() OVER (ORDER BY INST_DT DESC, POST_SEQ DESC)) ROWNUM, POST_SEQ, BLOG_ID, TITLE
-FROM ICTPOSTS) A
-WHERE A.ROWNUM < 11;
-*/
+
+exports.listPost = async function(parameters) {
+	console.log(parameters);
+	var list = [];
+	await pool.query(`SELECT ROWNUM, POST_SEQ, TITLE
+	, POST_URL, SUBTITLE, AUTHOR
+	, NOTE_DTL, INST_DT, NEWPOST
+	, VIEWCOUNT
+FROM (SELECT ROW_NUMBER() OVER(ORDER BY INST_DT DESC, POST_SEQ ASC) ROWNUM
+		  , POST_SEQ, TITLE, POST_URL
+		  , SUBTITLE, AUTHOR, NOTE_DTL, INST_DT
+		  , CASE WHEN INST_DT = TO_CHAR(NOW(), 'YYYYMMDD') THEN '1' ELSE '0' END NEWPOST 
+		  , (SELECT COUNT(1) FROM (SELECT DISTINCT POST_SEQ, IP FROM ICTVIEWLOG) A WHERE A.POST_SEQ = T.POST_SEQ) VIEWCOUNT
+   FROM ICTPOSTS T
+   WHERE TITLE LIKE '%' || $1 || '%'
+   ) A
+WHERE ROWNUM BETWEEN $2 + 1 AND $2 + 10
+ORDER BY ROWNUM`, parameters)
+	.then(function(res) { list = res.rows;});
+	return list;
+}

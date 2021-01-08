@@ -8,26 +8,19 @@
     <link href="/css/style.css" rel="stylesheet"/>
     <script src="/js/jquery/jquery.js"></script>
     <script src="/js/bootstrap/bootstrap.bundle.min.js">
-    //TODO - NOT DONE
-    //TODO 5. BACKOFFICE(조회 통계, 배치 관리)
-    //TODO 6. index.ejs에 뉴스피드
-    //TODO 7. 검색 기능
-    
-    //포스트별 LIKE BUTTON => user개념이 있어야 가능.. 왜냐하면 ip로 하면 무한 like가능하기 때문..
     </script>
   </head>
   <body>
     <div class="container" id="body">
-      <h3 class="post-list-title"><%= queryText %> - 검색 결과</h3>
+      <h3 class="post-list-title"><%= queryText %> - 검색 결과 <%=list.length%>건</h3>
       <div class="post-list" id="postlist">
         <!-- 최초 출력은 최근 10개까지만, 이후는 스크롤 로딩 -->
         <% for(var i = 0; i < (list.length > 10 ? 10 : list.length); ++i) { %>
           <div class="card shadow post p20m15 component">
             <div class="post-wraper">
-              <h4 class="post-title" onClick="moveTo('<%=list[i]['post_url']%>', <%=list[i]['post_seq']%>)"><%=list[i]["title"]%>
-                <% if(list[i]["newpost"] == "1") { %>
-                  &#127381;
-                <% } %>
+              <h4 class="post-title" onClick="moveTo('<%=list[i]['post_url']%>', <%=list[i]['post_seq']%>)">
+                <%=list[i]["title"]%>
+                <% if(list[i]["newpost"] == "1") { %>&#127381;<% } %>
               </h4>
               <p class="post-subtitle" onClick="moveTo('<%=list[i]['post_url']%>', <%=list[i]['post_seq']%>)"><%=list[i]["subtitle"]%></p>
               <p><%="스크랩 일자 : " + list[i]["inst_dt"].substr(0,4) + "/" + list[i]["inst_dt"].substr(4,2) + "/" + list[i]["inst_dt"].substr(6,2)%></p>
@@ -135,21 +128,23 @@
           }
           if($(window).scrollTop() + diff >= $(document).height() - $(window).height()){
             if(!flag_ajax) {
-              var company = location.href.split('?')[1].split('=')[1];
+              var queryText = decodeURI(location.href.split('?')[1].split('=')[1]);
               var rowcount = document.getElementById("postlist").childElementCount;
-              if(countAllPosts == rowcount) return;//이미 다 load했으면 서버 request하지 않음.
+              console.log(countAllPosts);
+              console.log(rowcount);
+              
+              if(countAllPosts <= rowcount) return;//이미 다 load했으면 서버 request하지 않음.
               flag_ajax = true;
               printLoading();
               $.ajax({
                 type: "post",
-                url: "/postList",
+                url: "/query",
                 data: {
-                  "company": company,
-                  "rowcount" : rowcount
+                  "queryText": queryText,
+                  "rowcount": rowcount
                 },
                 success: function(result) {
-                  //console.log("scroll load completed.");
-                  //console.log(result.data);
+                  console.log(result.data);
                   renderPostlist(result.data);//이 데이터를 렌더링하자.
                   flag_ajax = false;
                   unprintLoading();
