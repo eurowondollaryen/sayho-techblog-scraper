@@ -26,7 +26,6 @@
 6. 기술블로그를 한 눈에 리스트업해서 볼 수 있다.
 
 ## TODO
-- Search => PROCESSING...
 - Back Office (조회 통계, 배치 관리)
 - News Feed
 
@@ -40,6 +39,7 @@
 - 새로운 글 표시 -> done.
 - POST에 조회수 표시 -> done.
 - get 방식 company=이상한값으로 요청하면 서버 에러 나는거 => 404로 돌리도록 수정 -> done.
+- Search -> done.
 
 ## Reference - Node scheduler
 - scheduler 관련 참고 자료
