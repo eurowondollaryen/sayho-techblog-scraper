@@ -25,7 +25,6 @@ ORDER BY ROWNUM`, parameters)
 }
 
 exports.listPost = async function(parameters) {
-	console.log(parameters);
 	var list = [];
 	await pool.query(`SELECT ROWNUM, POST_SEQ, TITLE
 	, POST_URL, SUBTITLE, AUTHOR

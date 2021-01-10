@@ -19,10 +19,7 @@
           <div class="card shadow post p20m15 component">
             <div class="post-wraper">
               <h4 class="post-title" onClick="moveTo('<%=list[i]['post_url']%>', <%=list[i]['post_seq']%>)">
-                <% var splitted = list[i]["title"].split(queryText);%>
-                  <%for(var j = 0; j < splitted.length; ++j) {%>
-                     <%if(j > 0) {%><strong><%=queryText%></strong><%=splitted[j]%><%} else {%><%=splitted[j]%><%}%>
-                  <%}%>
+                <%=list[i]["title"]%>
                 <% if(list[i]["newpost"] == "1") { %>&#127381;<% } %>
               </h4>
               <p class="post-subtitle" onClick="moveTo('<%=list[i]['post_url']%>', <%=list[i]['post_seq']%>)"><%=list[i]["subtitle"]%></p>
