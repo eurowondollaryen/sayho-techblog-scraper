@@ -10,6 +10,7 @@ var postController = require("./controllers/postController.js");
 var blogController = require("./controllers/blogController.js");
 var logController = require("./controllers/logController.js");
 var queryController = require("./controllers/queryController.js");
+var adminController = require("./controllers/adminController.js");
 
 exports.route = function(app) {
 	//main route
@@ -34,4 +35,7 @@ exports.route = function(app) {
 	//query route
 	app.get("/query", queryController.listGet);
 	app.post("/query", queryController.listPost);
+
+	//admin route
+	app.get("/admin", adminController.adminIndex);
 };
