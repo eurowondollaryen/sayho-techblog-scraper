@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+  <head>
+	<meta charset="UTF-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tech Blog Web Scraper</title>
+	<link href="/css/bootstrap/bootstrap.min.css" rel="stylesheet"/>
+	<link href="/css/style.css" rel="stylesheet"/>
+	<script src="/js/jquery/jquery.js"></script>
+	<script src="/js/bootstrap/bootstrap.bundle.min.js"></script>
+  </head>
+  <body>
+	<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+		<!--logo-->
+		<a class="navbar-brand" href="#">Admin</a>
+		<ul class="navbar-nav">
+			<li class="nav-item">
+				<a class="nav-link" href="#">Statistics</a>
+			</li>
+		</ul>
+	</nav>
+	<div class="container">
+		<h1 class="text-centered title"><strong>&#128240;Tech Blog Web Scraper - Admin</strong></h1>
+		
+		<h4 class="tabtitle"><strong>Menues</strong></h4>
+		<div class="card shadow component  searchbar-wrapper">
+			
+		</div>
+		<button id="theme_btn" class="btn btn-dark" onClick="switchTheme(this.classList[1].split('-')[1])">다크 모드로 보기</button>
+	</div>
+
+	<script src="/js/theme.js"></script>
+	<script>
+		
+	</script>
+	<script>
+		//onload event
+		document.addEventListener("DOMContentLoaded", function() {
+			switchTheme(window.localStorage.theme);
+		});
+	</script>
+	
+  </body>
+</html>
