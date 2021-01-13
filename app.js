@@ -3,6 +3,8 @@ var app = express();
 var fs = require("fs");
 var path = require("path");
 
+//2021.01.13 로그인을 위한 session 추가
+var session = require("express-session");
 //body-parser : FOR HANDLING POST DATA
 const bodyParser = require("body-parser");
 
@@ -34,6 +36,13 @@ app.engine("html", require("ejs").renderFile);
 
 //use public directory
 app.use(express.static(path.join(__dirname,'/public')));
+
+//use session 2021.01.13 로그인을 위해 session 추가
+app.use(session({
+    secret: "qwe123",
+    resave: false,
+    saveUninitialized: true
+}));
 
 // CORS
 app.all('/*', (req, res, next) => {

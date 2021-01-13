@@ -10,11 +10,12 @@
   "author": "Seho Kim",
   "license": "ISC",
   "dependencies": {
-    "axios": "^0.20.0",
+    "axios": "^0.21.1",
     "body-parser": "^1.19.0",
     "cheerio": "^1.0.0-rc.3",
     "ejs": "^3.1.5",
     "express": "^4.17.1",
+    "express-session": "^1.17.1",
     "node-schedule": "^1.3.2",
     "pg": "^8.5.1",
     "selenium-webdriver": "^4.0.0-alpha.7"

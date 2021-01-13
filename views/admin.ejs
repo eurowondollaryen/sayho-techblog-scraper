@@ -16,6 +16,9 @@
 			<li class="nav-item">
 				<a class="nav-link" href="#">Statistics</a>
 			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="#" onClick="logout();">Logout</a>
+			</li>
 		</ul>
 	</nav>
 	<div class="container">
@@ -37,6 +40,21 @@
 		document.addEventListener("DOMContentLoaded", function() {
 			switchTheme(window.localStorage.theme);
 		});
+		var logout = function() {
+			$.ajax({
+				type: "post",
+				url: "/adminLogout",
+				data: {},
+				success: function(result) {
+					alert("logout success");
+					window.location = "/admin";
+					console.log(result.data);
+                },
+                error : function(xhr, textStatus, errorThrown) {
+                  alert("logout failed.\n" + xhr.status + " " + xhr.statusText);
+                }
+			});
+		};
 	</script>
 	
   </body>
