@@ -38,4 +38,5 @@ exports.route = function(app) {
 
 	//admin route
 	app.get("/admin", adminController.adminIndex);
+	app.post("/adminLogin", adminController.adminLogin);
 };

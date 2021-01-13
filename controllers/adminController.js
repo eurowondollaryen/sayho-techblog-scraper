@@ -4,8 +4,15 @@ var admin = require("../models/admin.js");
 const adminIndex = async function(req, res) {
 	res.render("adminPassword", {});
 }
+
+//admin login
+const adminLogin = async function(req, res) {
+	console.log(req.param("password"));
+	res.send(req.param("password"));
+}
 //export controller functions
 exports.adminIndex = adminIndex;
+exports.adminLogin = adminLogin;
 /*
 TODO : ADMIN
 1. [HOST]/admin에 접속한다.
