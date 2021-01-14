@@ -61,10 +61,13 @@ exports.adminIndex = adminIndex;
 exports.adminLogin = adminLogin;
 exports.adminLogout = adminLogout;
 /*
-TODO : ADMIN
+TODO : ADMIN - LOGIN/LOGOUT
 1. [HOST]/admin에 접속한다.
 1-a. 세션이 있으면 admin 메뉴페이지를 보여준다. - done
 1-b. 세션이 없으면 비밀번호 입력 페이지를 보여준다. - done
 2. 비밀번호 입력 후 일치하면, 세션 생성하고, admin 메뉴페이지로 이동한다. - done
-3. admin페이지에서 로그아웃하면, 세션 삭제하고, adminPassword.ejs로 이동한다.
+3. admin페이지에서 로그아웃하면, 세션 삭제하고, adminPassword.ejs로 이동한다. - done
+TODO : ADMIN - STATISTICS
+1. 일별 접속자수(등락을 볼 수 있도록 바+선차트)
+2. 포스트별 조회수 랭킹
 */
