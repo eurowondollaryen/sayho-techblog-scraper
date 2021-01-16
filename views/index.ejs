@@ -74,6 +74,14 @@
 		};
 		//onload event
 		document.addEventListener("DOMContentLoaded", function() {
+			$.ajax({
+				type: "post",
+				url: "/visitlog",
+				data: {route: "/"},
+				error: function(xhr, textStatus, errorThrown) {
+					console.log("visit log insert failed.\n" + xhr.status + " " + xhr.statusText);
+				}
+			});
 			switchTheme(window.localStorage.theme);
 		});
 		

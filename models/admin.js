@@ -13,3 +13,16 @@ exports.adminLogin = async function(parameters) {
 	.then(function(res) { list = res.rows;});
 	return list;
 };
+
+exports.statVisit = async function() {
+	var list = [];
+	await pool.query(`
+	SELECT DT, COUNT(1) CNT
+    FROM (SELECT IP, ROUTE, SUBSTR(TIMESTAMP,1,8) DT
+          FROM ICTVISITLOG
+          GROUP BY IP, ROUTE, SUBSTR(TIMESTAMP,1,8)
+          ) A
+    GROUP BY DT
+	`).then(function(res) { list = res.rows; });
+	return list;
+}

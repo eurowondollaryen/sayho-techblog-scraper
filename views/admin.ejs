@@ -4,9 +4,26 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Tech Blog Web Scraper</title>
 	<link href="/css/bootstrap/bootstrap.min.css" rel="stylesheet"/>
+	<link href="/css/tui-chart/tui-chart.min.css" rel="stylesheet"/>
 	<link href="/css/style.css" rel="stylesheet"/>
 	<script src="/js/jquery/jquery.js"></script>
 	<script src="/js/bootstrap/bootstrap.bundle.min.js"></script>
+	<script src="/js/tui-chart/tui-chart.min.js"></script>
+	<style>
+		.menu {
+			display: none;
+			height: 50%;
+		}
+		.menu-area {
+			width: 100%;
+			height: 50%;
+			padding: 20px;
+		}
+		.submit-btn {
+			width: 100px;
+			height: 50px;
+		}
+	</style>
   </head>
   <body>
 	<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
@@ -16,8 +33,8 @@
 			<li class="nav-item dropdown">
 				<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">통계</a>
 				<div class="dropdown-menu">
-					<a class="dropdown-item" href="#">일일 방문자 수(작업중)</a>
-					<a class="dropdown-item" href="#">포스트별 조회수 순위</a>
+					<a class="dropdown-item" href="#" onClick="loadMenu(event, 'menu_visitors')">일일 방문자 수</a>
+					<a class="dropdown-item" href="#" onClick="loadMenu(event, 'menu_post_views')">포스트별 조회수 순위</a>
 				</div>
 			</li>
 			<li class="nav-item">
@@ -27,10 +44,41 @@
 	</nav>
 	<div class="container">
 		<h1 class="text-centered title"><strong>&#128240;Tech Blog Web Scraper - Admin</strong></h1>
-		
-		<h4 class="tabtitle"><strong>Menues</strong></h4>
-		<div class="card shadow component  searchbar-wrapper">
-			
+		<div class="menues-wrapper">
+			<!-- 일일 방문자 수 -->
+			<div class="menu" id="menu_visitors">
+				<h4 class="menu-title"><strong>일일 방문자 수</strong></h4>
+				<div class="card shadow component menu-area">
+					
+						<!--
+						<div class="form-group">
+							<label for="exampleInputEmail1">Email address</label>
+							<input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+							<small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+						</div>
+						<div class="form-group">
+							<label for="exampleInputPassword1">Password</label>
+							<input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+						</div>
+						<div class="form-group form-check">
+							<input type="checkbox" class="form-check-input" id="exampleCheck1">
+							<label class="form-check-label" for="exampleCheck1">Check me out</label>
+						</div>
+					-->
+						<button class="btn btn-primary" onClick="requestVisitors();">조회</button>
+					
+					<div id="chart-area">
+
+					</div>
+				</div>
+			</div>
+			<!-- 포스트별 조회수 순위 -->
+			<div class="menu" id="menu_post_views">
+				<h4 class="menu-title"><strong>포스트별 조회수 순위</strong></h4>
+				<div class="card shadow component menu-area">
+					post chart
+				</div>
+			</div>
 		</div>
 		<button id="theme_btn" class="btn btn-dark" onClick="switchTheme(this.classList[1].split('-')[1])">다크 모드로 보기</button>
 	</div>
@@ -40,9 +88,35 @@
 		
 	</script>
 	<script>
+		var requestVisitors = function() {
+			$.ajax({
+				type: "post",
+				url: "/statistics/visit",
+				data: {},
+				success: function(result) {
+					console.log(result.data);
+				},
+				error: function(xhr, textStatus, errorThrown) {
+					alert("request failed.\n" + xhr.status + " " + xhr.statusText);
+				}
+			})
+		};
+
+		var loadMenu = function(event, menuName) {
+			var menues = document.getElementsByClassName("menu");
+			for(var i = 0; i < menues.length; ++i) {
+				if(menues[i].getAttribute("id") == menuName) {
+					menues[i].style.display = "block";
+				} else {
+					menues[i].style.display = "none";
+				}
+			}
+		};
+
 		//onload event
 		document.addEventListener("DOMContentLoaded", function() {
 			switchTheme(window.localStorage.theme);
+			loadMenu(event, 'menu_visitors');
 		});
 		var logout = function() {
 			$.ajax({

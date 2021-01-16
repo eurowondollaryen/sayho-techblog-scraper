@@ -9,7 +9,7 @@ const adminIndex = async function(req, res) {
 	} else {
 		res.render("adminPassword", {});
 	}
-}
+};
 
 //admin login
 const adminLogin = async function(req, res) {
@@ -37,7 +37,7 @@ const adminLogin = async function(req, res) {
 		});
 	}
 
-}
+};
 
 //admin logout
 const adminLogout = async function(req, res) {
@@ -54,14 +54,24 @@ const adminLogout = async function(req, res) {
 	} else {
 		res.redirect("/");
 	}
-}
+};
+
+//statistics - visitors
+const statVisit = async function(req, res) {
+	var data = {
+		data: await admin.statVisit()
+	}
+	res.send(data);
+};
 
 //export controller functions
 exports.adminIndex = adminIndex;
 exports.adminLogin = adminLogin;
 exports.adminLogout = adminLogout;
+exports.statVisit = statVisit;
+
 /*
-TODO : ADMIN - LOGIN/LOGOUT
+DONE : ADMIN - LOGIN/LOGOUT
 1. [HOST]/admin에 접속한다.
 1-a. 세션이 있으면 admin 메뉴페이지를 보여준다. - done
 1-b. 세션이 없으면 비밀번호 입력 페이지를 보여준다. - done

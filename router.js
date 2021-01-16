@@ -31,6 +31,7 @@ exports.route = function(app) {
 	
 	//log route
 	app.post("/createlog", logController.create);
+	app.post("/visitlog", logController.visit);
 
 	//query route
 	app.get("/query", queryController.listGet);
@@ -40,4 +41,5 @@ exports.route = function(app) {
 	app.get("/admin", adminController.adminIndex);
 	app.post("/adminLogin", adminController.adminLogin);
 	app.post("/adminLogout", adminController.adminLogout);
+	app.post("/statistics/visit", adminController.statVisit);
 };
