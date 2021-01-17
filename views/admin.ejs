@@ -67,9 +67,7 @@
 					-->
 						<button class="btn btn-primary" onClick="requestVisitors();">조회</button>
 					
-					<div id="chart-area">
-
-					</div>
+					<div id="chart-area"></div>
 				</div>
 			</div>
 			<!-- 포스트별 조회수 순위 -->
@@ -85,9 +83,78 @@
 
 	<script src="/js/theme.js"></script>
 	<script>
-		
+
 	</script>
 	<script>
+		
+		var loadChart = function(inpData) {
+			var container = document.getElementById("chart-area");
+			var categoriesArray = [];
+			var valueArray = [];
+			for(var i = 0; i < inpData.length; ++i) {
+				categoriesArray.push(inpData[i]["dt"]);
+				valueArray.push(inpData[i]["cnt"]);
+			}
+
+			var data = {
+				categories: categoriesArray,
+				series: {
+					column: [{
+						name: 'visitors',
+						data: valueArray
+					}]
+				},
+				line: [{
+					name: 'Average',
+					data: valueArray
+				}]
+			};
+			
+			var options = {
+				chart: {
+					width: 1160,
+					height: 540,
+					title: "사이트 일일 방문자 수"
+				},
+				yAxis: [{
+					title: "Visitor Count",
+					chartType: "column",
+					labelMargin: 15
+				}, {
+					title: "Visitor Count",
+					chartType: "line",
+					labelMargin: 15
+				}],
+				xAxis: {
+					title: "Date"
+				},
+				series: {
+					line: {
+						showDot: true
+					}
+				},
+				tooltip: {
+					grouped: true,
+					suffix: "명"
+				}
+			};
+			
+			var theme = {
+				series: {
+					column: {
+						colors: ["#83b14e"]
+					},
+					line: {
+						colors: ["#333"]
+					}
+				}
+			};
+			// For apply theme
+			// tui.chart.registerTheme('myTheme', theme);
+			// options.theme = 'myTheme';
+			var chart = tui.chart.comboChart(container, data, options);
+		};
+
 		var requestVisitors = function() {
 			$.ajax({
 				type: "post",
@@ -95,6 +162,8 @@
 				data: {},
 				success: function(result) {
 					console.log(result.data);
+					//loadChart(result.data);
+					//chartTest();
 				},
 				error: function(xhr, textStatus, errorThrown) {
 					alert("request failed.\n" + xhr.status + " " + xhr.statusText);
@@ -117,6 +186,7 @@
 		document.addEventListener("DOMContentLoaded", function() {
 			switchTheme(window.localStorage.theme);
 			loadMenu(event, 'menu_visitors');
+			
 		});
 		var logout = function() {
 			$.ajax({
