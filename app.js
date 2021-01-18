@@ -113,13 +113,7 @@ selenium documentation
 https://www.selenium.dev/documentation/en/getting_started_with_webdriver/locating_elements/
 */
 
-
 require("./router.js").route(app);
-
-//FOR TESTING BATCH LOGIC
-app.get("/runbatch", async function(req, res) {
-	await batch.scraping();
-});
 
 app.get("*", (req, res) => {
     res.end('<head><title>404</title></head><body><h1>404 Error!</h1></body>');

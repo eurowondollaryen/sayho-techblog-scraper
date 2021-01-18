@@ -42,4 +42,5 @@ exports.route = function(app) {
 	app.post("/adminLogin", adminController.adminLogin);
 	app.post("/adminLogout", adminController.adminLogout);
 	app.post("/statistics/visit", adminController.statVisit);
+	app.post("/runbatch", adminController.runbatch);
 };

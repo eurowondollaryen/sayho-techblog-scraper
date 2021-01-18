@@ -1,4 +1,5 @@
-var admin = require("../models/admin.js");
+const admin = require("../models/admin.js");
+const batch = require("../batch.js");
 
 //admin page
 const adminIndex = async function(req, res) {
@@ -64,11 +65,24 @@ const statVisit = async function(req, res) {
 	res.send(data);
 };
 
+//batch
+const runbatch = async function(req, res) {
+	//TODO : return
+	var retStr = "success";
+	try {
+		await batch.scraping();
+	} catch (e) {
+		retStr = e;
+	}
+	await res.send(retStr);
+};
+
 //export controller functions
 exports.adminIndex = adminIndex;
 exports.adminLogin = adminLogin;
 exports.adminLogout = adminLogout;
 exports.statVisit = statVisit;
+exports.runbatch = runbatch;
 
 /*
 DONE : ADMIN - LOGIN/LOGOUT
