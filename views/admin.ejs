@@ -26,24 +26,28 @@
 	<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
 		<!--logo-->
 		<a class="navbar-brand" href="#">Admin</a>
-		<ul class="navbar-nav">
-			<li class="nav-item dropdown">
-				<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">통계</a>
-				<div class="dropdown-menu">
-					<a class="dropdown-item" href="#" onClick="loadMenu(event, 'menu_visitors')">일일 방문자 수</a>
-					<a class="dropdown-item" href="#" onClick="loadMenu(event, 'menu_post_views')">포스트별 조회수 순위</a>
-				</div>
-			</li>
-			<li class="nav-item dropdown">
-				<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">포스트 관리</a>
-				<div class="dropdown-menu">
-					<a class="dropdown-item" href="#" onClick="loadMenu(event, 'menu_batch')">배치 관리</a>
-				</div>
-			</li>
-			<li class="nav-item">
-				<a class="nav-link" href="#" onClick="logout();"><strong>Logout</strong></a>
-			</li>
-		</ul>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarNavDropdown">
+			<ul class="navbar-nav">
+				<li class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">통계</a>
+					<div class="dropdown-menu">
+						<a class="dropdown-item" href="#" onClick="loadMenu(event, 'menu_visitors')">일일 방문자 수</a>
+						<a class="dropdown-item" href="#" onClick="loadMenu(event, 'menu_post_views')">포스트별 조회수 순위</a>
+					</div>
+				</li>
+				<li class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">포스트 관리</a>
+					<div class="dropdown-menu">
+						<a class="dropdown-item" href="#" onClick="loadMenu(event, 'menu_batch')">배치 관리</a>
+					</div>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="#" onClick="logout();"><strong>Logout</strong></a>
+				</li>
+			</ul>
 	</nav>
 	<div class="container">
 		<h1 class="text-centered title"><strong>&#128240;Tech Blog Web Scraper - Admin</strong></h1>
@@ -86,12 +90,13 @@
 	<script type="text/javascript" src="/js/tui-chart/tui-chart.min.js"></script>
 	<script>
 		var runBatch = function() {
-			//TODO : REQUEST TO SERVER(BATCH)
+			document.getElementById("batch-area").innerHTML = "running...";
 			$.ajax({
 				type: "post",
 				url: "/runbatch",
 				data: {},
 				success: function(result) {
+					document.getElementById("batch-area").innerHTML = "";
 					alert(result);
 				},
 				error: function(xhr, textStatus, errorThrown) {
