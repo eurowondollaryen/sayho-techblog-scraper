@@ -34,6 +34,12 @@
 					<a class="dropdown-item" href="#" onClick="loadMenu(event, 'menu_post_views')">포스트별 조회수 순위</a>
 				</div>
 			</li>
+			<li class="nav-item dropdown">
+				<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">포스트 관리</a>
+				<div class="dropdown-menu">
+					<a class="dropdown-item" href="#" onClick="loadMenu(event, 'menu_batch')">배치 관리</a>
+				</div>
+			</li>
 			<li class="nav-item">
 				<a class="nav-link" href="#" onClick="logout();"><strong>Logout</strong></a>
 			</li>
@@ -57,6 +63,13 @@
 					post chart
 				</div>
 			</div>
+			<!-- 포스트별 조회수 순위 -->
+			<div class="menu" id="menu_batch">
+				<h4 class="menu-title"><strong>배치 관리</strong></h4>
+				<div class="card shadow component menu-area">
+					<button class="btn btn-primary" onClick="runBatch();">배치 실행</button>
+				</div>
+			</div>
 		</div>
 		<button id="theme_btn" class="btn btn-dark" onClick="switchTheme(this.classList[1].split('-')[1])">다크 모드로 보기</button>
 	</div>
@@ -71,6 +84,10 @@
 	<!-- tui-chart -->
 	<script type="text/javascript" src="/js/tui-chart/tui-chart.min.js"></script>
 	<script>
+		var runBatch = function() {
+			//TODO : REQUEST TO SERVER(BATCH)
+		};
+		/* 불러온 데이터로 차트 표시 */
 		var loadChart = function(inpData) {
 			var container = document.getElementById("chart-area");
 			container.innerHTML = "";
