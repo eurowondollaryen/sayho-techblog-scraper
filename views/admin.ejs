@@ -47,6 +47,9 @@
 				<li class="nav-item">
 					<a class="nav-link" href="#" onClick="logout();"><strong>Logout</strong></a>
 				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="#" onClick="moveToMain();"><strong>Go to Main</strong></a>
+				</li>
 			</ul>
 	</nav>
 	<div class="container">
@@ -89,6 +92,9 @@
 	<!-- tui-chart -->
 	<script type="text/javascript" src="/js/tui-chart/tui-chart.min.js"></script>
 	<script>
+		var moveToMain = function() {
+			window.location.href = "/";
+		};
 		var runBatch = function() {
 			document.getElementById("batch-area").innerHTML = "running...";
 			$.ajax({
@@ -97,7 +103,7 @@
 				data: {},
 				success: function(result) {
 					document.getElementById("batch-area").innerHTML = "";
-					alert(result);
+					alert("success!");
 				},
 				error: function(xhr, textStatus, errorThrown) {
 					alert("request failed.\n" + xhr.status + " " + xhr.statusText);

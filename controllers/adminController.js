@@ -69,11 +69,7 @@ const statVisit = async function(req, res) {
 const runbatch = async function(req, res) {
 	//TODO : return
 	var retStr = "success";
-	try {
-		await batch.scraping();
-	} catch (e) {
-		retStr = e;
-	}
+	await batch.scraping();
 	await res.send(retStr);
 };
 
