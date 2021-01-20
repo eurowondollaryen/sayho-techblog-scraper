@@ -96,14 +96,14 @@
 			window.location.href = "/";
 		};
 		var runBatch = function() {
-			document.getElementById("batch-area").innerHTML = "running...";
+			document.getElementById("batch-area").innerHTML = "batch process is running. please wait...";
 			$.ajax({
 				type: "post",
 				url: "/runbatch",
 				data: {},
 				success: function(result) {
 					document.getElementById("batch-area").innerHTML = "";
-					alert("success!");
+					alert("batch process successfully completed.");
 				},
 				error: function(xhr, textStatus, errorThrown) {
 					alert("request failed.\n" + xhr.status + " " + xhr.statusText);

@@ -7,6 +7,7 @@ https://www.postgresql.org/docs/9.1/catalogs.html
 const { Pool } = require('pg');
 
 //for heroku
+//MUST uncomment below when deploy!
 
 const pool = new Pool({
 	connectionString: process.env.DATABASE_URL,
@@ -16,6 +17,7 @@ const pool = new Pool({
 });
 
 //for local
+//MUST comment below when deploy!
 /*
 const pool = new Pool({
 	user : "postgres",
