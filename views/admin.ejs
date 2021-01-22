@@ -67,7 +67,8 @@
 			<div class="menu" id="menu_post_views">
 				<h4 class="menu-title"><strong>포스트별 조회수 순위</strong></h4>
 				<div class="card shadow component menu-area">
-					post chart
+					<div id="chart-area-postviewcount"></div>
+					<button class="btn btn-primary" onClick="requestViewCount();">조회</button>
 				</div>
 			</div>
 			<!-- 포스트별 조회수 순위 -->
@@ -111,63 +112,84 @@
 			});
 		};
 		/* 불러온 데이터로 차트 표시 */
-		var loadChart = function(inpData) {
-			var container = document.getElementById("chart-area");
-			container.innerHTML = "";
-			//inpData를 chart에 맞게 변환
-			
-			var categoriesData = [];
-			var seriesData = [];
-			for(var i = 0; i < inpData.length; ++i) {
-				categoriesData.push(inpData[i]["dt"]);
-				seriesData.push(Number(inpData[i]["cnt"]));
-			}
-			var data = {
-				categories: categoriesData,
-				series: [
-					{
-						name: 'visitors',
-						data: seriesData
-					}
-				]
-			};
-			var options = {
-				chart: {
-					width: document.getElementById("chart-area").offsetWidth,
-					height: 540,
-					title: '일일 방문자 수'
-				},
-				yAxis: {
-					title: '방문자 수',
-				},
-				xAxis: {
-					title: 'Date',
-					pointOnColumn: true,
-					dateFormat: 'MMM',
-					tickInterval: 'auto'
-				},
-				series: {
-					showDot: false,
-					zoomable: true
-				},
-				tooltip: {
-					suffix: '명'
+		var loadChart = function(chartDiv, inpData) {
+			console.log("chart name : " + chartDiv);
+			if(chartDiv == "visit") {
+				var container = document.getElementById("chart-area");
+				container.innerHTML = "";
+				//inpData를 chart에 맞게 변환
+				
+				var categoriesData = [];
+				var seriesData = [];
+				for(var i = 0; i < inpData.length; ++i) {
+					categoriesData.push(inpData[i]["dt"]);
+					seriesData.push(Number(inpData[i]["cnt"]));
 				}
-			};
-			var theme = {
-				series: {
-					colors: [
-						'#83b14e', '#458a3f', '#295ba0', '#2a4175', '#289399',
-						'#289399', '#617178', '#8a9a9a', '#516f7d', '#dddddd'
+				var data = {
+					categories: categoriesData,
+					series: [
+						{
+							name: 'visitors',
+							data: seriesData
+						}
 					]
-				}
-			};
-			// For apply theme
-			// tui.chart.registerTheme('myTheme', theme);
-			// options.theme = 'myTheme';
-			var chart = tui.chart.lineChart(container, data, options);
+				};
+				var options = {
+					chart: {
+						width: document.getElementById("chart-area").offsetWidth,
+						height: 540,
+						title: '일일 방문자 수'
+					},
+					yAxis: {
+						title: '방문자 수',
+					},
+					xAxis: {
+						title: 'Date',
+						pointOnColumn: true,
+						dateFormat: 'MMM',
+						tickInterval: 'auto'
+					},
+					series: {
+						showDot: false,
+						zoomable: true
+					},
+					tooltip: {
+						suffix: '명'
+					}
+				};
+				var theme = {
+					series: {
+						colors: [
+							'#83b14e', '#458a3f', '#295ba0', '#2a4175', '#289399',
+							'#289399', '#617178', '#8a9a9a', '#516f7d', '#dddddd'
+						]
+					}
+				};
+				// For apply theme
+				// tui.chart.registerTheme('myTheme', theme);
+				// options.theme = 'myTheme';
+				var chart = tui.chart.lineChart(container, data, options);
+			} else {
+				console.log("there is no chartDiv like " + chartDiv);
+			}
+			
 		};
-
+		//포스트별 조회수 request
+		var requestViewCount = function() {
+			$.ajax({
+				type: "post",
+				url: "/statistics/viewcount",
+				data: {},
+				success: function(result) {
+					console.log(result);
+					loadChart("viewcount", result.data);
+				},
+				error: function(xhr, textStatus, errorThrown) {
+					alert("request failed. \n" + xhr.status + " " + xhr.statusText);
+				}
+			});
+		}
+		//홈페이지 방문자수 request
 		var requestVisitors = function() {
 			$.ajax({
 				type: "post",
@@ -175,7 +197,7 @@
 				data: {},
 				success: function(result) {
 					console.log(result.data);
-					loadChart(result.data);
+					loadChart("visit", result.data);
 					//chartTest();
 				},
 				error: function(xhr, textStatus, errorThrown) {
