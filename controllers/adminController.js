@@ -65,6 +65,14 @@ const statVisit = async function(req, res) {
 	res.send(data);
 };
 
+//statistics - viewCount
+const statViewCount = async function(req, res) {
+	var data = {
+		data: await admin.statViewCount()
+	}
+	res.send(data);
+};
+
 //batch
 const runbatch = async function(req, res) {
 	//TODO : return
@@ -78,6 +86,7 @@ exports.adminIndex = adminIndex;
 exports.adminLogin = adminLogin;
 exports.adminLogout = adminLogout;
 exports.statVisit = statVisit;
+exports.statViewCount = statViewCount;
 exports.runbatch = runbatch;
 
 /*

@@ -25,4 +25,20 @@ exports.statVisit = async function() {
     GROUP BY DT
 	`).then(function(res) { list = res.rows; });
 	return list;
-}
+};
+
+exports.statViewCount = async function() {
+	var list = [];
+	await pool.query(`
+	SELECT A.CNT CNT, A.POST_SEQ POST_SEQ, B.BLOG_ID BLOG_ID, B.TITLE TITLE, B.POST_URL POST_URL
+	FROM (SELECT COUNT(1) CNT, POST_SEQ
+			FROM ICTVIEWLOG
+			GROUP BY POST_SEQ
+			) A LEFT OUTER JOIN
+			(SELECT BLOG_ID, POST_SEQ, TITLE, POST_URL
+			FROM ICTPOSTS) B
+	ON A.POST_SEQ = B.POST_SEQ
+	ORDER BY A.CNT DESC, A.POST_SEQ ASC
+	`).then(function(res) { list = res.rows; });
+	return list;
+};
