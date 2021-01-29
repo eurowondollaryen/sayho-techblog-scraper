@@ -51,10 +51,10 @@ td {
 
 #theme_btn {
   position: fixed;
-  width: 180px;
-  height: 51px;
+  width: 160px;
+  height: 40px;
   bottom: 10px;
-  right: 20px;
+  right: 10px;
 }
 
 .title {
