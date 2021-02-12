@@ -15,15 +15,15 @@ const axios = require("axios");
 const cheerio = require("cheerio");
 
 //selenium
-const {Builder, By, Key, until} = require("selenium-webdriver");
+const { Builder, By, Key, until } = require("selenium-webdriver");
 
 //node-schedule
 //매일 자정에 scraping작업을 한다.
 //reference : https://bblog.tistory.com/307
 var schedule = require("node-schedule");
 const batch = require("./batch.js");
-var scheduler = schedule.scheduleJob("00 00 00 * * *", async function() {
-	await batch.scraping();
+var scheduler = schedule.scheduleJob("00 00 00 * * *", async function () {
+  await batch.scraping();
 });
 
 //port set
@@ -35,30 +35,35 @@ app.set("view engine", "ejs");
 app.engine("html", require("ejs").renderFile);
 
 //use public directory
-app.use(express.static(path.join(__dirname,'/public')));
+app.use(express.static(path.join(__dirname, "/public")));
 
 //use session 2021.01.13 로그인을 위해 session 추가
-app.use(session({
+app.use(
+  session({
     secret: "qwe123",
     resave: false,
-    saveUninitialized: true
-}));
+    saveUninitialized: true,
+  })
+);
 
 // CORS
-app.all('/*', (req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+app.all("/*", (req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
   next();
 });
 
 //use body-parser
-app.use(bodyParser.urlencoded({extended : false}));
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 //run server
-app.listen(port, function(){
-    console.log('Server is running on  port ' + port);
+app.listen(port, function () {
+  console.log("Server is running on  port " + port);
 });
 
 /*
@@ -114,7 +119,3 @@ https://www.selenium.dev/documentation/en/getting_started_with_webdriver/locatin
 */
 
 require("./router.js").route(app);
-
-app.get("*", (req, res) => {
-    res.end('<head><title>404</title></head><body><h1>404 Error!</h1></body>');
-});

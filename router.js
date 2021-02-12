@@ -12,36 +12,41 @@ var logController = require("./controllers/logController.js");
 var queryController = require("./controllers/queryController.js");
 var adminController = require("./controllers/adminController.js");
 
-exports.route = function(app) {
-	//main route
-	app.get("/", blogController.printBlogList);
-	//post route
-	//app.get("/", post.list);
-	app.get("/createPost", postController.create);
-	app.get("/updatePost", postController.update);
-	app.get("/removePost", postController.remove);
-	app.get("/postList", postController.getPostListGet);
-	app.post("/postList", postController.getPostListPost);
-	
-	//blog route
-	app.get("/createBlog", blogController.create);
-	app.get("/updateBlog", blogController.update);
-	app.get("/removeBlog", blogController.remove);
-	app.get("/blogList", blogController.getBlogList);
-	
-	//log route
-	app.post("/createlog", logController.create);
-	app.post("/visitlog", logController.visit);
+exports.route = function (app) {
+  //main route
+  app.get("/", blogController.printBlogList);
+  //post route
+  //app.get("/", post.list);
+  app.get("/createPost", postController.create);
+  app.get("/updatePost", postController.update);
+  app.get("/removePost", postController.remove);
+  app.get("/postList", postController.getPostListGet);
+  app.post("/postList", postController.getPostListPost);
 
-	//query route
-	app.get("/query", queryController.listGet);
-	app.post("/query", queryController.listPost);
+  //blog route
+  app.get("/createBlog", blogController.create);
+  app.get("/updateBlog", blogController.update);
+  app.get("/removeBlog", blogController.remove);
+  app.get("/blogList", blogController.getBlogList);
 
-	//admin route
-	app.get("/admin", adminController.adminIndex);
-	app.post("/adminLogin", adminController.adminLogin);
-	app.post("/adminLogout", adminController.adminLogout);
-	app.post("/statistics/visit", adminController.statVisit);
-	app.post("/statistics/viewcount", adminController.statViewCount);
-	app.post("/runbatch", adminController.runbatch);
+  //log route
+  app.post("/createlog", logController.create);
+  app.post("/visitlog", logController.visit);
+
+  //query route
+  app.get("/query", queryController.listGet);
+  app.post("/query", queryController.listPost);
+
+  //admin route
+  app.get("/admin", adminController.adminIndex);
+  app.post("/adminLogin", adminController.adminLogin);
+  app.post("/adminLogout", adminController.adminLogout);
+  app.post("/statistics/visit", adminController.statVisit);
+  app.post("/statistics/viewcount", adminController.statViewCount);
+  app.post("/runbatch", adminController.runbatch);
+
+  //404
+  app.get("*", (req, res) => {
+    res.end("<head><title>404</title></head><body><h1>404 Error!</h1></body>");
+  });
 };
