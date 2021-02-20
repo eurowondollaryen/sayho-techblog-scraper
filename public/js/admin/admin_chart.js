@@ -52,9 +52,6 @@ var loadChart = function(chartDiv, inpData) {
                 ]
             }
         };
-        // For apply theme
-        // tui.chart.registerTheme('myTheme', theme);
-        // options.theme = 'myTheme';
         var chart = tui.chart.lineChart(container, data, options);
     } else if (chartDiv == "chart-area-postviewcount") {//포스트별 조회수 순위
         
@@ -136,7 +133,6 @@ var requestVisitors = function() {
         success: function(result) {
             console.log(result.data);
             loadChart("chart-area-visit", result.data);
-            //chartTest();
         },
         error: function(xhr, textStatus, errorThrown) {
             alert("request failed.\n" + xhr.status + " " + xhr.statusText);
