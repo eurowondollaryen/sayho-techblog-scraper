@@ -4,49 +4,49 @@ db configuration 정보가 들어있다.
 postgresql metadata table 리스트
 https://www.postgresql.org/docs/9.1/catalogs.html
 */
-const { Pool } = require('pg');
+const { Pool } = require("pg");
 
 //for heroku
 //MUST uncomment below when deploy!
 
 const pool = new Pool({
-	connectionString: process.env.DATABASE_URL,
-	ssl: {
-		rejectUnauthorized: false
-	}
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false,
+  },
 });
 
 //for local
 //MUST comment below when deploy!
 /*
 const pool = new Pool({
-	user : "postgres",
-	host : "127.0.0.1",
-	database : "postgres",
-	password : "root##3804",
-	port : "5432"
+  user: "postgres",
+  host: "127.0.0.1",
+  database: "postgres",
+  password: "root##3804",
+  port: "5432",
 });
 */
-exports.connect = function(){
-	//pool error check
-	pool.on("error", (err, client) => {
-		console.error("Unexpected error on idle client", err);
-		process.exit(-1);
-	});
-	
-	pool.connect((err, client, release) => {
-		if(err) {
-			return console.error("error acquiring client", err.stack);
-		}
-		client.query("SELECT NOW()", (err, res) => {
-			release();
-			if(err) {
-				console.log(err.stack);
-			} else {
-				console.log(res.rows[0]);
-			}
-		});
-	});
+exports.connect = function () {
+  //pool error check
+  pool.on("error", (err, client) => {
+    console.error("Unexpected error on idle client", err);
+    process.exit(-1);
+  });
+
+  pool.connect((err, client, release) => {
+    if (err) {
+      return console.error("error acquiring client", err.stack);
+    }
+    client.query("SELECT NOW()", (err, res) => {
+      release();
+      if (err) {
+        console.log(err.stack);
+      } else {
+        console.log(res.rows[0]);
+      }
+    });
+  });
 };
 exports.pool = pool;
 

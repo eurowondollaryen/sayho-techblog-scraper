@@ -8,6 +8,26 @@ var session = require("express-session");
 //body-parser : FOR HANDLING POST DATA
 const bodyParser = require("body-parser");
 
+//**https
+//https://nodejs.org/api/https.html#https_https_createserver_options_requestlistener
+//https://eunsukimme.github.io/nodejs/2019/09/20/Express-SSL-HTTPS/
+const https = require("https");
+/*
+TODO: GET SSL
+const options = {
+  key: fs.readFileSync(__dirname + '/인증서경로/domain_xxxxx.key.pem')
+  cert: fs.readFileSync(__dirname + '/인증서경로/domain_xxxxx.crt.pem')
+  ca: fs.readFileSync(__dirname + '/인증서경로/ca-chain-bundle.pem')
+};
+const options = {
+  key: fs.readFileSync('test/fixtures/keys/agent2-key.pem'),
+  cert: fs.readFileSync('test/fixtures/keys/agent2-cert.pem')
+};
+const options = {
+  pfx: fs.readFileSync('test/fixtures/test_cert.pfx'),
+  passphrase: 'sample'
+};
+*/
 //axios : get html from url
 //cheerio : use queryselector
 //npm install --save axios cheerio
@@ -65,7 +85,12 @@ app.use(bodyParser.json());
 app.listen(port, function () {
   console.log("Server is running on  port " + port);
 });
-
+/*
+TODO : GET SSL
+https.createServer(options, app).listen(port, function () {
+  console.log("Server is running on  port " + port);
+});
+ */
 /*
 의문점 : selenium을 활용하려면 webdriver가 필요한데,
 이거 heroku에서 세팅 가능한지? putty같은걸로 접속 되는지 확인해보기
