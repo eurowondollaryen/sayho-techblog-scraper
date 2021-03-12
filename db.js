@@ -8,17 +8,17 @@ const { Pool } = require("pg");
 
 //for heroku
 //MUST uncomment below when deploy!
-/*
+
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: {
     rejectUnauthorized: false,
   },
 });
-*/
+
 //for local
 //MUST comment below when deploy!
-
+/*
 const pool = new Pool({
   user: "postgres",
   host: "127.0.0.1",
@@ -26,7 +26,7 @@ const pool = new Pool({
   password: "root##3804",
   port: "5432",
 });
-
+*/
 exports.connect = function () {
   //pool error check
   pool.on("error", (err, client) => {
