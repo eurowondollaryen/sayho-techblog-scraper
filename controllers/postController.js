@@ -20,11 +20,11 @@ const remove = function (req, res) {
 
 const getPostListGet = async function (req, res) {
   console.log(
-    "[postController][getPostList]request data : " + req.query["company"]
+    "[postController][getPostListGet]request data : " + req.query["company"]
   );
-  var parameters = [req.query["company"]];
+  const parameters = [req.query["company"]];
   //parameter가 null이면 404
-  if (parameters[0] == null || parameters[0] == undefined) {
+  if (parameters[0] === null || parameters[0] === undefined) {
     res.end("<head><title>404</title></head><body><h1>404 Error!</h1></body>");
     return;
   }
@@ -32,7 +32,7 @@ const getPostListGet = async function (req, res) {
   var list = await post.getPostList(parameters);
   var blogInfo = await blog.getBlogId(parameters);
   //없는 회사명을 입력했을 경우 404
-  if (blogInfo[0] == null || blogInfo[0] == undefined) {
+  if (blogInfo[0] === null || blogInfo[0] === undefined) {
     res.end("<head><title>404</title></head><body><h1>404 Error!</h1></body>");
     return;
   }
@@ -42,10 +42,10 @@ const getPostListGet = async function (req, res) {
     list: list,
   });
 };
+
 const getPostListPost = async function (req, res) {
-  console.log(req.body["company"]);
   console.log(
-    "[postController][getPostList2] request data : " + req.body["company"]
+    "[postController][getPostListPost] request data : " + req.body["company"]
   );
   var parameters = [req.body["company"], req.body["rowcount"]];
   res.send({

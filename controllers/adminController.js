@@ -1,84 +1,83 @@
+//post : req.body, get(url) : req.query
 const admin = require("../models/admin.js");
 const batch = require("../batch.js");
 
 //admin page
-const adminIndex = async function(req, res) {
-	//session이 존재하면 바로 admin.ejs로 이동
-	console.log(req.session);
-	if(req.session.userid) {
-		res.render("admin", {});
-	} else {
-		res.render("adminPassword", {});
-	}
+const adminIndex = async function (req, res) {
+  //session이 존재하면 바로 admin.ejs로 이동
+  console.log(req.session);
+  if (req.session.userid) {
+    res.render("admin", {});
+  } else {
+    res.render("adminPassword", {});
+  }
 };
 
 //admin login
-const adminLogin = async function(req, res) {
-	
-	var sess = req.session;
-	var username = "admin";
-	var password = req.param("password");
-	
-	var loginResult = await admin.adminLogin([username, password]);
+const adminLogin = async function (req, res) {
+  var sess = req.session;
+  var username = "admin";
+  var password = req.body["password"];
 
-	var result = {};
-	if(loginResult.length == 1) {
-		result["success"] = 1;
-		sess.userid = loginResult[0]["id"];
-		sess.name = loginResult[0]["name"];//save user
-		console.log(sess);
-		res.render("admin", {
-			loginResult: result
-		});
-	} else {
-		result["success"] = 0;
-		result["error"] = "login failed";
-		res.render("adminPassword", {
-			loginResult: result
-		});
-	}
+  var loginResult = await admin.adminLogin([username, password]);
 
+  var result = {};
+  if (loginResult.length == 1) {
+    result["success"] = 1;
+    sess.userid = loginResult[0]["id"];
+    sess.name = loginResult[0]["name"]; //save user
+    console.log(sess);
+    res.render("admin", {
+      loginResult: result,
+    });
+  } else {
+    result["success"] = 0;
+    result["error"] = "login failed";
+    res.render("adminPassword", {
+      loginResult: result,
+    });
+  }
 };
 
 //admin logout
-const adminLogout = async function(req, res) {
-	var sess = req.session;
-	if(sess.userid) {
-		req.session.destroy(function(err) {
-			if(err) {
-				console.log(err);
-			} else {
-				console.log("logout success");
-				res.redirect("/");
-			}
-		});
-	} else {
-		res.redirect("/");
-	}
+const adminLogout = async function (req, res) {
+  var sess = req.session;
+  if (sess.userid) {
+    req.session.destroy(function (err) {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log("logout success");
+        res.redirect("/");
+      }
+    });
+  } else {
+    res.redirect("/");
+  }
 };
 
 //statistics - visitors
-const statVisit = async function(req, res) {
-	var data = {
-		data: await admin.statVisit()
-	}
-	res.send(data);
+const statVisit = async function (req, res) {
+  var data = {
+    data: await admin.statVisit(),
+  };
+  res.send(data);
 };
 
 //statistics - viewCount
-const statViewCount = async function(req, res) {
-	var data = {
-		data: await admin.statViewCount()
-	}
-	res.send(data);
+const statViewCount = async function (req, res) {
+  var data = {
+    data: await admin.statViewCount(),
+  };
+  res.send(data);
 };
 
 //batch
-const runbatch = async function(req, res) {
-	//TODO : return
-	var retStr = "success";
-	await batch.scraping();
-	await res.send(retStr);
+const runbatch = async function (req, res) {
+  //TODO : return
+  var retStr = "success";
+  await batch.scraping();
+  await res.send(retStr);
 };
 
 //export controller functions
