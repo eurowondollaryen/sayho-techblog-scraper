@@ -60,7 +60,7 @@ app.use(express.static(path.join(__dirname, "/public")));
 //use session 2021.01.13 로그인을 위해 session 추가
 app.use(
   session({
-    secret: "qwe123",
+    secret: "root##3804",
     resave: false,
     saveUninitialized: true,
   })
