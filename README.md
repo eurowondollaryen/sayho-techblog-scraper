@@ -32,7 +32,6 @@
 - React.js랑 프로젝트 분리하고, 해당 프로젝트는 API 형태로 바꾸는 방향으로 - DONE
 - DB구축, Node scheduler 적용하여.. 스케쥴러로 돌아가도록 수정 - DONE
 - SCROLL LOAD 발동 시 DB 조회 (done. 모든 post가 조회되었을 때도 예외처리 필요 -> done.)
-- 조회된 값을 HTML RENDERING(done. react.js 활용 필요)
 - 포스트 클릭 시, 해당 포스트에 대해 클릭한 로그 남기기(포스트ID, IP, 시간) -> done.
 - DARK MODE -> done.
 - 새로운 글 표시 -> done.
