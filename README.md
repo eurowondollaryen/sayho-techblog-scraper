@@ -25,21 +25,6 @@
 5. `node app.js`
 6. 기술블로그를 한 눈에 리스트업해서 볼 수 있다.
 
-## TODO
-- News Feed
-
-## TODO - DONE
-- React.js랑 프로젝트 분리하고, 해당 프로젝트는 API 형태로 바꾸는 방향으로 - DONE
-- DB구축, Node scheduler 적용하여.. 스케쥴러로 돌아가도록 수정 - DONE
-- SCROLL LOAD 발동 시 DB 조회 (done. 모든 post가 조회되었을 때도 예외처리 필요 -> done.)
-- 포스트 클릭 시, 해당 포스트에 대해 클릭한 로그 남기기(포스트ID, IP, 시간) -> done.
-- DARK MODE -> done.
-- 새로운 글 표시 -> done.
-- POST에 조회수 표시 -> done.
-- get 방식 company=이상한값으로 요청하면 서버 에러 나는거 => 404로 돌리도록 수정 -> done.
-- Search -> done.
-- Back Office (조회 통계, 배치 관리) -> done.
-
 ## Reference - Node scheduler
 - scheduler 관련 참고 자료
 - [노드 서버를 이용한 스케쥴러 구성](https://bblog.tistory.com/307)
