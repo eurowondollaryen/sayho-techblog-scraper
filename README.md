@@ -4,9 +4,6 @@
 ## What is this?
 - 제각각인 여러 회사들의 기술블로그를 매일 한 번씩 스크랩 해와서, 한 눈에 볼 수 있게 도와주는 웹 앱
 
-## How to use
-- [돈이 없어 Heroku에서 운영중](https://techblog-scraper.herokuapp.com/)
-
 ## Purpose
 - 여러 국내/외 IT 회사들의 시행착오와, 적용하는 기술, 현업에서 필요로 하는 기술 수준을 한 눈에 보고 싶어서
 
